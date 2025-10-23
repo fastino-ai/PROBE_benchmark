@@ -1,0 +1,150 @@
+Generate a realistic calendar event that fulfills this specific evidence role while avoiding contamination from other bottlenecks.
+
+## Target Bottleneck
+**Description**: {{ bottleneck.description }}
+**Type**: {{ bottleneck.type }}
+
+## Your Evidence Role
+**Specific Role**: {{ evidence_role }}
+
+This calendar event should provide ONLY the evidence specified in your role. Do NOT include complete information about the bottleneck - other documents will provide the missing pieces.
+
+## Context
+- **Persona**: {{ world_model.persona_full_name }}
+- **Occupation**: {{ world_model.persona_occupation }}
+- **About**: {{ world_model.persona_about }}
+- **Company**: {{ world_model.organizational_structure.company_name }}
+- **Department**: {{ world_model.organizational_structure.department }}
+- **Team**: {% for rel in world_model.relationships[:5] %}{{ rel.name }}{% if not loop.last %}, {% endif %}{% endfor %}
+- **Difficulty**: {{ world_model.context_difficulty.value }}
+
+## Key Relationships (Potential Attendees)
+{% for rel in world_model.relationships[:8] %}
+- **{{ rel.name }}** ({{ rel.type.value }}): {{ rel.relationship_context }}
+{% endfor %}
+
+## CRITICAL: Bottlenecks to AVOID
+**You must NOT include any information related to these other bottlenecks:**
+{% for bottleneck_desc in other_bottlenecks %}
+{{ bottleneck_desc }}
+{% endfor %}
+
+## Requirements
+- **Evidence Role Focus**: Only provide evidence for your specific role, not the complete bottleneck
+- **Natural Event**: Should be a realistic workplace meeting/event
+- **Subtle Integration**: Your evidence role should be woven naturally into the event context
+- **Contamination Prevention**: Absolutely NO references to the other bottlenecks listed above or any issue that {{ world_model.persona_full_name }} may find important and actionable (by him specifically!!)
+- **Incomplete Information**: The event alone should NOT be sufficient to identify or resolve the bottleneck
+- **Professional Context**: Maintain appropriate workplace meeting standards
+- **Natural Elements**: Include some random links, minor typos, and workplace references
+- **Formatting**: Use proper meeting agenda formatting with time allocations and logistics
+- Today's date is March 15th, 2025, so any dates should be in the near past or future
+
+## Difficulty Guidelines
+{% if world_model.context_difficulty.value == "easy" %}
+- Make your evidence role fairly obvious in the event details
+- The bottleneck aspect can be mentioned more directly in description
+- Still require other sources for complete picture
+{% elif world_model.context_difficulty.value == "medium" %}
+- Make your evidence role subtle and require inference from event context
+- Embed the evidence within normal meeting purposes
+- Require correlation with other sources to be actionable
+{% else %}
+- Make your evidence role indirect and require personal context to be put together
+- The bottleneck evidence should be barely detectable in event details
+- Require significant correlation across multiple sources
+{% endif %}
+
+## Few-Shot Examples
+
+### Example 1: Resource Allocation Bottleneck (Medium Difficulty)
+**Bottleneck**: "The cloud infrastructure budget request submitted to Finance on March 15th is still pending approval, blocking the team from scaling services for Q2 launch. "
+
+```json
+{
+  "title": "Q2 Planning & Resource Review",
+  "description": "Quarterly planning session to align on Q2 objectives and resource allocation.\n\nAgenda:\n1. Q1 performance review (15 min)\n2. Q2 product roadmap priorities (30 min)\n3. Resource allocation discussion (20 min)\n   - Engineering headcount needs\n   - AWS $$$ requirements and pending items\n   - Marketing budget for Q2 campaigns\n4. Dependencies and blockers (15 min)\n5. Timeline review and milestone setting (10 min)\n\nPlease bring:\n- Your team's Q2 objectives\n- Resource requirements spreadsheet\n- Any blocking issues for discussion\n\nNote: Finance team will join for agenda item #3",
+  "start_time": "2024-03-28T14:00:00Z",
+  "end_time": "2024-03-28T15:30:00Z",
+  "attendees": ["Sarah Chen", "Mike Rodriguez", "Priya Patel", "James Wilson", "Finance Team"]
+}
+```
+
+### Example 2: Conflicting Deadlines (Easy Difficulty)
+**Bottleneck**: "The API documentation deadline of April 15th conflicts with the client demo preparation also due April 15th, and you're the lead on both."
+
+```json
+{
+  "title": "Sprint Planning - API Docs & Client Demo Prep",
+  "description": "Planning session for upcoming deliverables\n\n- all docs done (Due: the 15)\n- Andurill Corp showcase final overview ( date: April 15th)\n- Resource allocation for both projects\n- Risk mitigation strategies",
+  "start_time": "2024-04-08T10:00:00Z",
+  "end_time": "2024-04-08T11:00:00Z",
+  "attendees": ["Team Lead", "Tech Writers", "Demo Team"]
+}
+```
+
+### Example 3: Stakeholder Availability Issue (Hard Difficulty)
+**Bottleneck**: "The product design review requires approval from VP of Design who is on vacation until April 20th, but the development team needs to start implementation by April 10th."
+
+```json
+{
+  "title": "Design Team Weekly Sync",
+  "description": "Weekly design team alignment meeting\n\nAgenda:\n1. Current project status updates\n   - Mobile app redesign progress\n   - Web platform UI improvements\n   - Brand guideline updates\n\n2. Upcoming milestones\n   - Q2 design sprint planning\n   - Design system component review\n   - Stakeholder feedback sessions\n\n3. Team updates\n   - Conference attendance plans\n   - Training opportunities\n   - April vacation coverage plans\n\n4. Tools and process improvements\n   - New prototyping tool evaluation\n   - Design handoff workflow optimization\n\n5. Open discussion\n\nReminder: Next week's meeting will be led by Sarah due to leadership team offsites",
+  "start_time": "2024-04-03T15:00:00Z",
+  "end_time": "2024-04-03T16:00:00Z",
+  "attendees": ["Design Team", "Product Managers", "Engineering Liaisons"]
+}
+```
+
+### Example 4: Meeting Scheduling Conflict (Medium Difficulty)
+**Bottleneck**: "The quarterly board presentation on May 1st at 2pm conflicts with the already-scheduled all-hands meeting that includes a major product announcement."
+
+```json
+{
+  "title": "May Planning & Calendar Review",
+  "description": "Monthly planning session to coordinate May activities\n\nKey dates to discuss:\n- May 1: Multiple important events scheduled\n- May 5-7: Annual conference (who's attending?)\n- May 15: Product launch activities\n- May 20: Team offsite planning\n\nTopics:\n1. Event coordination and logistics\n2. Coverage plans for conference week\n3. Product launch timeline review\n4. Resource allocation for May initiatives\n5. Communication strategy for major announcements\n\nAction items:\n- Confirm all May calendar holds\n- Identify any scheduling conflicts\n- Plan for executive availability\n- Coordinate with facilities for event spaces",
+  "start_time": "2024-04-25T13:00:00Z",
+  "end_time": "2024-04-25T14:00:00Z",
+  "attendees": ["Operations Team", "Executive Assistants", "Communications", "Product Team"]
+}
+```
+
+### Example 5: Dependency Bottleneck (Hard Difficulty)
+**Bottleneck**: "The backend API development is blocked waiting for the authentication service specifications from the Security team, who haven't responded to requests sent two weeks ago."
+
+```json
+{
+  "title": "Engineering Architecture Review",
+  "description": "Bi-weekly architecture and technical design review\n\nAgenda:\n1. Architecture decisions from last session\n2. New design proposals\n   - Microservices migration plan\n   - API gateway implementation\n   - Service mesh evaluation\n\n3. Technical dependencies review\n   - Cross-team dependencies status\n   - Third-party service integrations\n   - Security compliance requirements\n\n4. Performance and scaling considerations\n   - Load testing results\n   - Capacity planning for Q3\n   - Database optimization strategies\n\n5. Tech debt and refactoring priorities\n\n6. Q&A and open discussion\n\nPrep work: Please review the shared architecture docs for remaining items on backend dev",
+  "start_time": "2024-03-20T14:00:00Z",
+  "end_time": "2024-03-20T15:30:00Z",
+  "attendees": ["Engineering Leads", "Architecture Team", "DevOps", "Product Technical Liaisons"]
+}
+```
+
+**CRITICAL: You must respond with ONLY valid JSON. No explanations, no markdown, no extra text.**
+
+**Output Format Requirements:**
+- Start your response with `{`
+- End your response with `}`
+- Use valid JSON syntax only
+- Include ALL required fields: title, description, start_time, end_time, location, attendees
+- Do not include any text before or after the JSON
+
+**Required JSON structure:**
+```json
+{
+  "title": "Natural event title (avoid problem-focused titles)",
+  "description": "Event description that provides your evidence role within normal meeting context",
+  "start_time": "2025-03-15T14:00:00Z",
+  "end_time": "2025-03-15T15:00:00Z",
+  "location": "Conference Room A",
+  "attendees": ["Name 1", "Name 2", "Name 3"]
+}
+```
+
+**IMPORTANT**:
+- Your entire response must be parseable as JSON
+- Use attendee names from the relationships listed above
+- Your calendar event should fulfill your evidence role while being insufficient alone to resolve the bottleneck
+- Do not add any explanatory text before or after the JSON

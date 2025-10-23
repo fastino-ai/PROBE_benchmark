@@ -1,0 +1,50 @@
+You are tasked with generating realistic professional relationships for a persona based on their LinkedIn profile.
+
+PERSONA INFORMATION:
+- Name: {{ persona.name }}
+- Occupation: {{ persona.occupation }}
+- Location: {{ persona.location }}
+- About: {{ persona.about }}
+
+DIFFICULTY LEVEL: {{ difficulty }}
+- Generate between {{ min_relationships }} and {{ max_relationships }} relationships
+
+REQUIREMENTS:
+1. Create a diverse mix of relationship types (colleagues, managers, direct reports, clients, stakeholders, vendors, mentors, mentees, cross-functional partners)
+2. Make the relationships contextually appropriate for the persona's role and seniority
+3. Provide meaningful context about the state and nature of each relationship
+
+OUTPUT FORMAT:
+Return a JSON object with a "relationships" array. Each relationship should have:
+- name: Full name of the person
+- type: One of [colleague, manager, direct_report, client, stakeholder, vendor, mentor, mentee, cross_functional_partner]
+- department: Their department (can be null for external relationships)
+- relationship_context: One sentence describing the current state of the relationship, including how they interact and what they work on together
+
+{% if difficulty == "easy" %}
+Focus on immediate team members and direct collaborators. Keep relationship contexts simple and straightforward.
+{% elif difficulty == "medium" %}
+Include a mix of immediate team, cross-functional partners, and some external relationships. Add nuanced relationship dynamics and collaborative contexts.
+{% elif difficulty == "hard" %}
+Create a complex web of relationships across multiple departments, external stakeholders, and various hierarchical levels. Include complex relationship dynamics, tensions, and multi-faceted collaborations.
+{% endif %}
+
+Example structure:
+{
+  "relationships": [
+    {
+      "name": "John Smith",
+      "type": "manager",
+      "department": "Product Management",
+      "relationship_context": "Weekly one-on-ones focused on Q4 roadmap alignment and budget planning, with strong mutual trust built over 3 years."
+    },
+    {
+      "name": "Sarah Lee",
+      "type": "colleague",
+      "department": "Engineering",
+      "relationship_context": "Close collaboration on the cloud migration project, meeting daily to resolve technical blockers and architecture decisions."
+    }
+  ]
+}
+
+Generate realistic, contextually appropriate relationships that reflect the persona's industry, role, and seniority level. Each relationship_context should provide insight into how they work together and the current state of their professional relationship.

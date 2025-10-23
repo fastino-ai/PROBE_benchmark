@@ -1,0 +1,121 @@
+You are tasked with creating a coordinated plan for distributing bottleneck evidence across multiple workplace documents. This plan ensures that no single document contains complete information and that evidence must be correlated across sources.
+
+## Target Bottleneck
+**Description**: {{ bottleneck.description }}
+**Type**: {{ bottleneck.type }}
+
+## Context
+- **Persona**: {{ world_model.persona_full_name }}
+- **Occupation**: {{ world_model.persona_occupation }}
+- **Company**: {{ world_model.organizational_structure.company_name }}
+- **Department**: {{ world_model.organizational_structure.department }}
+- **Difficulty**: {{ difficulty }}
+
+## Sources to Generate Evidence For
+{% for source in expected_sources %}
+- {{ source }}
+{% endfor %}
+
+## Other Bottlenecks to AVOID
+**CRITICAL**: The evidence must NOT contain any information related to these other bottlenecks:
+{% for bottleneck_desc in other_bottlenecks %}
+{{ bottleneck_desc }}
+{% endfor %}
+
+## Planning Requirements
+
+1. **Evidence Distribution**: Each source should provide only PARTIAL and very subtle/incomplete evidence for the target bottleneck
+2. **Coordination**: Evidence should require correlation across multiple sources to be actionable
+3. **Contamination Prevention**: Ensure NO evidence relates to the other bottlenecks listed above or any issue that the user may find important and problematic.
+4. **Quantitative Difficulty Requirements**:
+   - Easy: Direct keyword overlap (30-50%), evidence obvious when combined, minimal inference needed
+   - Medium: Moderate keyword overlap (10-20%), requires connecting 2-3 concepts, some domain knowledge needed
+   - Hard: No keyword overlap with bottleneck, requires 4+ conceptual connections, thorough personal context, indirect references only
+
+## Planning Instructions
+
+Create a plan that assigns each source both a document type and a specific role in revealing the bottleneck. For each source:
+- Assign a document type: "email", "calendar", or "document"
+- Define an evidence role (what aspect of the bottleneck it reveals)
+- Ensure variety across document types (don't make everything the same type)
+- Make each source completely insufficient on its own to identify or resolve the bottleneck. The bottleneck should require all sources to be put together.
+- Avoid any contamination from other bottlenecks
+
+## Anti-Bias Planning Requirements
+- **Distribute key terms**: Don't concentrate all important names/terms in one source
+- **Vary evidence clarity**: Use subtle evidence across sources
+- **Include noise**: Plan for each source to include some unrelated content
+- **Temporal distribution**: Plan sources to have different dates (March 10-20)
+- **Balance specificity**: Don't make all evidence highly specific
+
+**CRITICAL: You must respond with ONLY valid JSON. No explanations, no markdown, no extra text.**
+
+**Output Format Requirements:**
+- Start your response with `{`
+- End your response with `}`
+- Use valid JSON syntax only
+- Include ALL required fields
+- Do not include any text before or after the JSON
+
+**Required JSON structure:**
+
+```json
+{
+  "coordination_strategy": "Brief description of how the sources work together across document types",
+  "source_plans": [
+    {
+      "source": "source_name_from_list_above",
+      "document_type": "email|calendar|document",
+      "evidence_role": "Specific role this source plays in revealing the bottleneck",
+      "key_elements": ["Element 1", "Element 2", "Element 3"],
+      "why_insufficient_alone": "Explanation of why this source alone cannot resolve the bottleneck"
+    }
+  ]
+}
+```
+
+**IMPORTANT**: Your entire response must be parseable as JSON. Do not add any explanatory text.
+
+## Example Planning
+
+**Target Bottleneck**: "The Q3 marketing strategy document sent to Sarah Chen on September 15th is still awaiting her feedback, which is blocking the campaign launch scheduled for October 1st."
+
+**Sources**: ["email_threads", "project_documents", "calendar_events"]
+
+```json
+{
+  "coordination_strategy": "Evidence is distributed across communication channels - emails show follow-up attempts, documents show incomplete status, calendar shows approaching deadlines",
+  "source_plans": [
+    {
+      "source": "email_threads",
+      "document_type": "email",
+      "evidence_role": "Show that there is a huge  campaign launch upcoming, and it is an important one to the persona",
+      "key_elements": ["Casual mention of pending feedback", "Indirect timeline references", "General project status"],
+      "why_insufficient_alone": "Doesn't specify what document or who is causing the delay"
+    },
+    {
+      "source": "document",
+      "document_type": "document",
+      "evidence_role": "Show that the campaign is - in part - dependent on the Q3 marketing strategy document",
+      "key_elements": ["Draft status indicators", "Approval workflow references", "Incomplete sections"],
+      "why_insufficient_alone": "Doesn't show the communication attempts or timeline pressure"
+    },
+    {
+      "source": "calendar_event",
+      "document_type": "calendar",
+      "evidence_role": "Show that, along  withothers, Sarah Chen was invited to discuss contributing to the marketing strategy doc a week before and named one of the primary contributors.",
+      "key_elements": ["Campaign launch date", "Review meeting scheduling", "Timeline constraints"],
+      "why_insufficient_alone": "Doesn't identify what specifically is delayed or who is responsible"
+    },
+    {
+      "source": "personal_emails",
+      "document_type": "email",
+      "evidence_role": "Show that Sarah Chen promised last week to have the marketing strategy document ready before the calendar event she was invited to",
+      "key_elements": ["Casual mention of pending feedback", "Indirect timeline references", "General project status"],
+      "why_insufficient_alone": "Doesn't specify what document or who is causing the delay"
+    },
+  ]
+}
+```
+
+Now create the coordinated evidence plan for the target bottleneck and sources listed above.

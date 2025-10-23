@@ -1,0 +1,52 @@
+You are tasked with generating a realistic organizational structure for a professional based on their LinkedIn profile.
+
+PERSONA INFORMATION:
+- Name: {{ persona.name }}
+- Occupation: {{ persona.occupation }}
+- Location: {{ persona.location }}
+- About: {{ persona.about }}
+
+DIFFICULTY LEVEL: {{ difficulty }}
+- Team size should be between {{ min_team_size }} and {{ max_team_size }} people
+
+Generate a simplified organizational context that captures the key structural elements around this person.
+
+OUTPUT FORMAT:
+Return a JSON object with the following fields:
+
+{
+  "company_name": "Name of the company (infer from context or create plausible one)",
+  "department": "Department name",
+  "team_size": <number between {{ min_team_size }} and {{ max_team_size }}>,
+  "reporting_to": "Title of their manager",
+  "key_meetings": ["Array of regular meeting names as simple strings"]
+}
+
+IMPORTANT: key_meetings should be an array of simple string values, NOT objects. For example:
+- CORRECT: ["Weekly team standup", "Monthly all-hands", "Sprint planning"]
+- INCORRECT: [{"meeting_name": "Weekly team standup", "description": "..."}]
+
+{% if difficulty == "easy" %}
+Create a simple organizational structure:
+- Clear department and reporting line
+- 2-3 key meetings per week
+- Example meetings: ["Weekly team sync", "1-on-1 with manager", "Department standup"]
+{% elif difficulty == "medium" %}
+Add moderate complexity:
+- More complex departmental structure
+- 4-6 key meetings with different stakeholder groups
+- Example meetings: ["Weekly team sync", "Cross-functional planning", "Stakeholder reviews", "Sprint retrospective", "Leadership briefing"]
+{% elif difficulty == "hard" %}
+Create complex organizational dynamics:
+- Matrix or cross-functional complexity
+- 7-10 key meetings creating significant time pressure
+- Example meetings: ["Daily standup", "Executive steering committee", "Cross-regional sync", "Customer advisory board", "Product council", "Architecture review board", "Risk committee"]
+{% endif %}
+
+Ensure the organizational structure:
+1. Matches the seniority level implied by the persona's occupation
+2. Reflects realistic company dynamics for their industry
+3. Creates appropriate context for potential bottlenecks
+4. Aligns with the persona's location (considering regional business practices)
+
+Generate a realistic organizational context that would create natural friction points and collaboration needs.

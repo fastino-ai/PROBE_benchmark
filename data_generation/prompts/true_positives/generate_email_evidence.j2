@@ -1,0 +1,174 @@
+Generate a routine business email that fulfills this specific evidence role while avoiding contamination from other bottlenecks.
+
+## Target Bottleneck
+**Description**: {{ bottleneck.description }}
+**Type**: {{ bottleneck.type }}
+
+## Your Evidence Role
+**Specific Role**: {{ evidence_role }}
+
+This email should provide ONLY the evidence specified in your role. Do NOT include complete information about the bottleneck - other documents will provide the missing pieces.
+
+## Context
+- **Persona**: {{ world_model.persona_full_name }}
+- **Occupation**: {{ world_model.persona_occupation }}
+- **About**: {{ world_model.persona_about }}
+- **Company**: {{ world_model.organizational_structure.company_name }}
+- **Department**: {{ world_model.organizational_structure.department }}
+- **Team Size**: {{ world_model.organizational_structure.team_size }}
+- **Colleagues**: {% for rel in world_model.relationships[:5] %}{{ rel.name }} ({{ rel.type.value }}){% if not loop.last %}, {% endif %}{% endfor %}
+- **Difficulty**: {{ world_model.context_difficulty.value }}
+
+## Available Email Addresses
+**IMPORTANT**: Use ONLY these real email addresses from the world model relationships (do NOT invent new ones):
+{% for rel in world_model.relationships[:8] %}
+- **{{ rel.name }}**: {{ rel.name.lower().replace(' ', '.') }}@{{ world_model.organizational_structure.company_name.lower().replace(' ', '').replace('.', '') }}.com
+{% endfor %}
+
+## Personal Context
+- **Work Style**: {{ world_model.personal_context.work_style }}
+- **Communication Preferences**: {{ world_model.personal_context.communication_preferences | join(", ") }}
+- **Current Priorities**: {{ world_model.personal_context.current_priorities | join(", ") }}
+- **Pain Points**: {{ world_model.personal_context.pain_points | join(", ") }}
+
+## Key Relationships
+{% for rel in world_model.relationships[:5] %}
+- **{{ rel.name }}** ({{ rel.type.value }}): {{ rel.relationship_context }}
+{% endfor %}
+
+## CRITICAL: Bottlenecks to AVOID
+**You must NOT include any information related to these other bottlenecks:**
+{% for bottleneck_desc in other_bottlenecks %}
+{{ bottleneck_desc }}
+{% endfor %}
+
+## Requirements
+- **Evidence Role Focus**: Only provide evidence for your specific role, not the complete bottleneck
+- **Email Length**: {{ min_words }}-{{ max_words }} words for the content field
+- **Natural Content**: 70-80% of the email should be unrelated workplace content
+- **Subtle Integration**: Your evidence role should be woven naturally into broader communication
+- **Contamination Prevention**: Absolutely NO references to the other bottlenecks listed above or any issue that the user may find important and problematic
+- **Incomplete Information**: The email alone should NOT be sufficient to identify or resolve the bottleneck
+- **Natural Elements**: Include 1-2 minor typos, realistic links/references, and workplace imperfections
+- **Formatting**: Use natural workplace email formatting with proper spacing and structure
+- Today's date is March 15th, 2025, so any dates should be in the near past or future
+
+## Anti-Bias Requirements (CRITICAL)
+- **POPULATED RECIPIENTS**: Always include 1-3 email addresses in to/cc fields from Available Email Addresses
+- **BALANCED SPECIFICITY**: Don't make evidence content significantly more specific than context
+- **TERM LIMITS**: Try not to use bottleneck key terms, referring to them in natural alternative phrasing.
+- **REALISTIC NOISE**: Include some ambiguous or tangentially related content
+
+## Difficulty Guidelines
+{% if world_model.context_difficulty.value == "easy" %}
+- Make your evidence role fairly obvious but still incomplete
+- The bottleneck aspect can be mentioned more directly
+- Still require other sources for complete picture
+{% elif world_model.context_difficulty.value == "medium" %}
+- Make your evidence role subtle and require inference
+- Embed the evidence within other workplace topics
+- Require correlation with other sources to be actionable
+{% else %}
+- Make your evidence role indirect and require personal context to be put together
+- The bottleneck evidence should be barely detectable
+- Require significant correlation across multiple sources
+- Undiscoverable by keyword matching
+{% endif %}
+
+## Few-Shot Examples
+
+### Example 1: Delayed Feedback Bottleneck (Medium Difficulty)
+**Bottleneck**: "The Q3 marketing strategy document sent to Sarah Chen on September 15th is still awaiting her feedback, which is blocking the campaign launch scheduled for October 1st."
+
+```json
+{
+  "subject": "Weekly Team Sync, NEW docs",
+  "sender": "[use actual colleague email from Available Email Addresses section]",
+  "content": "Hi Team,\n\nHope everyone had a productive week! Here's our weekly roundup:\n\n**Project Updates:**\n- Mobile app v2.0 passed QA testing - great work everyon!\n- Customer portal redesign is 85% complete\n- API documentation updates are live on the wiki (https://wiki.company.com/api-docs)\n- Marketing materials for Q3 are in various stages (waiting on a few approvals)\n\n**Upcoming This Week:**\n- Design review meeting: Tuesday 2pm\n- Sprint planning: Wednesday 10am\n- Remember: Q3 all-hands is Thursday at 3pm in the main auditorium\n\n**Team News:**\n- Welcome to our new QA engineer, David Park! He'll be joining us Monday\n- Congrats to Lisa on her AWS certification! 🎉\n- Office HVAC will be serviced Tuesday morning (might be a bit chilly)\n\n**Action Items:**\n- Please submit your Q4 budget requests by EOW\n- Update your project status in JIRA before Monday's standup\n- Sarah, when you get a chance, could you take a look at the docs in your queue? Hoping to finalize things soon :) The campaign launch is coming up fast!\n\n**Reminders:**\n- Flu shots available in the lobby next Friday\n- Parking lot maintainence scheduled for Oct 5-6 (note the temporary entrance)\n- Don't forget to submit your conference requests for next year via the HR portal\n\nHave a great weekend!\n\nMike\n\nP.S. - The new coffee machine finally arrived! Check out the fancy latte art options ☕\nP.P.S - For those who missed it, the team lunch photos are in our shared drive: /team-events/september-2024",
+  "timestamp": "2024-09-22T16:45:00Z"
+}
+```
+
+### Example 2: Budget Approval Bottleneck (Hard Difficulty)
+**Bottleneck**: "The cloud infrastructure expansion budget request submitted to Finance on August 30th hasn't been approved, preventing the team from scaling services for the upcoming product launch."
+
+```json
+{
+  "subject": "Infrastructure Team Monthly Newsletter - September Edition",
+  "sender": "[use actual colleague email from Available Email Addresses section]",
+  "content": "Hello Infrastructure Team!\n\nWelcoe to our September newsletter. Lots happening this month!\n\n**🏆 Team Achivements:**\n- 99.98% uptime maintained across all services\n- Successful DR drill completed with 12-minute RTO\n- Implemented new monitoring dashboards (thanks Alex!)\n- Reduced average ticket resolution time by 22%\n\n**📊 Metrics Corner:**\n- Current capacity: 78% utilized (up from 71%)\n- API response time: 142ms average\n- Cost per transaction: $0.0023 (stayed the same despite growth!)\n- Support tickets closed: 234\n\n**🚀 What's Coming:**\n- Kubernetes upgrade scheduled for Oct 15-17\n- New backup solution POC starting next week\n- Security audit preparation begins Monday\n- Planning for holiday season traffic patterns\n\n**💡 Tech Tips:**\nCheck out the new bash scripts Jenny created for log analysis - they're in the shared repo under /utils/logs. Super helpful for debugging!\n\n**📅 Important Dates:**\n- Sept 28: Quarterly planning meeting\n- Oct 1: New fiscal quarter begins\n- Oct 3: Disaster recovery test\n- Oct 10: Team offsite planning session\n\n**🎯 Focus Areas:**\nWe're keeping an eye on capacity trends as we head into Q4. Current projections show we'll need to make some decisions soon about resource allocation. I've been coordinating with various teams about their Q4 needs. Still working through some of the planning details with Finance.\n\n**🍕 Team Building:**\nDon't forget about our team lunch next Thursday! We'll be trying that new Thai place downtown.\n\n**📝 Housekeeping:**\n- Please update your on-call preferences in PagerDuty\n- Complete the annual security training by Sept 30\n- Submit any PTO requests for the holidays ASAP\n\nAs always, my door (virtual or otherwise) is always open. Let me know if you have any questions or concerns!\n\nBest,\nPriya\n\n---\n'Infrastructure: The backbone of innovation'",
+  "timestamp": "2024-09-20T09:15:00Z"
+}
+```
+
+### Example 3: Meeting Conflict Bottleneck (Easy Difficulty)
+**Bottleneck**: "You have two important meetings scheduled at the same time on Tuesday at 2pm: the product roadmap review with the CEO and the client presentation with ABC Corp."
+
+```json
+{
+  "subject": "Quick scheduling changes",
+  "sender": "[use actual colleague email from Available Email Addresses section]",
+  "content": "Hi there,\n\nJust a quick note about your schedule for next week.\n\nI've confirmed the following meetings:\n\n- Monday 10am: Team standup (Conference Room A)\n- Tuesday 2pm: Product roadmap review with CEO (Executive Conference Room)\n- Tuesday 2pm: ABC Corp client presentation (Zoom link sent separately)\n- Wednesday 3pm: 1:1 with Sarah\n- Thursday 11am: Marketing sync\n- Friday 2pm: Sprint retrospective\n\nAlso, a few reminders:\n- Expense reports are due by end of week\n- The office will close early on Friday for the company picnic\n- IT will be updating systems Thursday night\n\nLet me know if you need any changes to your calendar.\n\nBest,\nAlex",
+  "timestamp": "2024-03-18T11:30:00Z"
+}
+```
+
+### Example 4: Stalled Approval Process (Medium Difficulty)
+**Bottleneck**: "The new hire requisition for a senior engineer submitted to HR three weeks ago hasn't been approved, delaying critical project staffing."
+
+```json
+{
+  "subject": "Engineering Wins",
+  "sender": "[use actual colleague email from Available Email Addresses section]",
+  "content": "Hey Engineering Team!\n\nWhat a week! Let's celebrate some wins and look ahead:\n\n**🎊 Shoutouts:**\n- Maria crushed the performance optimization - 40% faster load times!\n- Tom's documentation overhaul is getting rave reviews from new team members\n- The bug bash on Wednesday was super productive - 47 issues closed!\n\n**📈 Progress Updates:**\n- Feature flags system: Deployed to production\n- Mobile app refactor: 70% complete\n- API v3: In final testing phase\n- Team expansion plans: In progress with HR\n\n**🔧 Technical Decisions:**\nWe're moving forward with PostgreSQL for the new analytics service. Thanks to everyone who contributed to the evaluation!\n\n**📚 Learning & Development:**\n- Python workshop recordings are now available in our wiki\n- AWS credits approved for everyone's personal learning accounts\n- Conference budget for 2025 has been approved - start thinking about where you want to go!\n\n**🗓️ Upcoming:**\n- Architecture review: Monday 2pm\n- Customer demo prep: Tuesday morning\n- Hackathon planning meeting: Wednesday 4pm\n\n**🏠 Remote Work Reminder:**\nFor those working from home next week, remember to update your status in Slack. The office will be getting new monitors installed on Tuesday.\n\n**💭 Food for Thought:**\n'The best code is no code at all' - Jeff Atwood. Let's keep this in mind as we design our solutions!\n\nPS - If anyone knows a great senior engineer looking for opportunities, our headcount was approved and I'm keen to get someone onboard ASAP. The req has been with HR for a bit, so hopefully we can start interviewing soon!\n\nHave an awesome weekend!\nRaj",
+  "timestamp": "2024-09-27T17:20:00Z"
+}
+```
+
+### Example 5: Engineering Team requires more resources (Hard Difficulty)
+**Bottleneck**: "Persona (Joe) is a staffing manager for a project. The new hire requisition for a senior engineer submitted for the project to HR three weeks ago hasn't been approved, delaying critical project staffing."
+
+```json
+{
+  "subject": "Engineering Team Updates",
+  "sender": "[use actual colleague email from Available Email Addresses section]",
+  "content": "Hey Engineering Team!\n\n Hope that all is going well and that you are preparing for a very pleasant holiday season ahead. On my part, I am particularly excited for the office holiday party, which will be takin place next week in Conference Hall 277. Partners are welcome! Please show up \nWhat a week, wanted to go over notable accomplishments for the week: we, with the help of a strong effort from Alex Armstrong, got 75% of the way through the present sample analysis PR and it will soon be ready to review. The sample analysis PR is a PR that we've been working through for some time, and will introduce the following features. *Sample Efficient semi-supervised online learning* - we're able to greatly speed up the learning rate of our product recommender by interacting with the wants and needs of users in real time. *Multi-modal recommendation systems* - we're now able to effectively use screenshots of the users screen and audio recordings of their previous interactions to classify desired clothing items in real time. This has led to a 20-30% relative performance gain in our classifiers, which is a big boost in a competitive field like ours where performance margins are quite small. *Parallelizability* - our training is both model parallel and data parallel now, leading to 7X efficiency gains relative to V1.0. Not bad for a spring of a single week! we've also made good progress on the new data cleaning pipeline, and the team is making great strides in getting the new system ready to go live. We'll soon need to review the top prioritized bugs and features for the quarter ahead, which is a project I'm quite excited about. Remembeer that Finn will be OOO the next few weeks on paternity leave, so there is a chance we're going to need some of you to step up on the engineering load at this point. Tried to get new guy for the team to work on our RAG pipeline, having some difficulty with approval. Engineers- would really appreciate some extra work this weekend if at all possible to make out for lost capacity, I'd really like to get this system humming in production. I think every day when this system is not in our product is a day where salespeople in our company continue to make uninformed follow-up decisions, and we're losing monitary value in real time. May as well shift as fast as we possible can and do mass debugging and QA a week from now as the model is going through the company's approval process.  Might need one of the two staffing people on the team to help out with that. Beyond this, we're getting really good results from the new system and I'm very happy about the way we've gotten up and running. Thank you to everyone for your contributions, and have a wonderful week ahead! Best, Jonathan Jones. ",
+  "timestamp": "2024-09-27T17:20:00Z"
+}
+```
+
+Instructions:
+1. Write a NATURAL email that would realistically occur in this workplace
+2. Embed the bottleneck evidence subtly within broader workplace communication
+3. The evidence should be just one small part of a larger email
+4. For higher difficulties, make the evidence more implicit, more subtle (issue not found in the title/beginning of the email), and more reliant on the context provided to you
+5. Include plenty of unrelated but realistic workplace content
+6. Avoid using words like "bottleneck", "problem", "issue", "conflict" in obvious ways
+
+**CRITICAL: You must respond with ONLY valid JSON. No explanations, no markdown, no extra text.**
+
+**Output Format Requirements:**
+- Start your response with `{`
+- End your response with `}`
+- Use valid JSON syntax only
+- Include ALL required fields: subject, sender, to, cc, content, timestamp
+- Do not include any text before or after the JSON
+
+**Required JSON structure:**
+```json
+{
+  "subject": "Natural email subject (avoid problem-focused subjects)",
+  "sender": "email_address_from_available_list_above",
+  "to": ["recipient1@company.com", "recipient2@company.com"],
+  "cc": ["cc_recipient@company.com"],
+  "content": "Natural email body that provides your evidence role within broader workplace content ({{ min_words }}-{{ max_words }} words)",
+  "timestamp": "2025-03-15T10:30:00Z"
+}
+```
+
+**Remember**: Your email should fulfill your evidence role while being insufficient alone to resolve the bottleneck. Other sources will provide the missing information needed for a complete picture.
+**IMPORTANT**:
+- Your entire response must be parseable as JSON
+- The sender MUST be one of the actual email addresses from the "Available Email Addresses" section above
+- Your email should fulfill your evidence role while being insufficient alone to resolve the bottleneck
+- Do not add any explanatory text before or after the JSON

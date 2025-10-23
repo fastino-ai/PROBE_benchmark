@@ -1,0 +1,45 @@
+Enhance the following workplace {{ item_type.lower() }} to meet the requirements and leverage the context given to you effectively:
+
+## Context
+- **Company**: {{ world_model.organizational_structure.company_name }}
+- **Department**: {{ world_model.organizational_structure.department }}
+- **Persona**: {{ world_model.persona_full_name }}
+- **Occupation**: {{ world_model.persona_occupation }}
+- **About**: {{ world_model.persona_about }}
+
+## Available Actions Context
+The user has access to these types of actions:
+{% for action in actions %}
+- **{{ action.type }}**: {{ action.description }}
+{% endfor %}
+
+The enhanced content should:
+- Most important: contain no actual problems that the user should solve or address: any problems should pertain to other people and be inactionable by the user.
+- Feel authentic, important, and workplace-appropriate
+- **Be {{ min_words }}-{{ max_words }} words long - this is CRUCIAL**
+- Include specific metrics, system names, or technical processes
+- Have {{ urgency_level }} urgency cues (deadlines, stakeholder pressure, etc.)
+- Contain 1-2 minor typos that feel natural
+- Reference realistic workplace tools/systems (Jira, Slack, wiki links, etc.)
+
+## Enhancement Requirements
+1. **Length**: {{ min_words }}-{{ max_words }} words (currently appears shorter)
+2. **Urgency level**: {{ urgency_level }} (add appropriate urgency cues, deadlines, stakeholder mentions)
+3. **Technical details**: Include specific technical terms, metrics, system names, processes
+4. **Professional tone**: Use corporate language with some jargon
+5. **Natural elements**: Include 1-2 minor typos, a realistic link/reference, specific dates/times
+6. **Action-aware content**: Make content always reference at least a few personal context and available actions, but **DO NOT** require or suggest using those actions to solve some problem that might be important to the user.
+
+## Critical Constraints
+**AVOID THESE BOTTLENECKS:**
+{% for bottleneck in bottlenecks %}
+- {{ bottleneck.description }}
+{% endfor %}
+
+## Original Content
+{{ current_content }}
+
+## Instructions
+Rewrite the content to be longer, more urgent, and technically detailed while staying completely unrelated to the bottlenecks above and only including problems that are not important to / addressable by the user. Include natural imperfections like minor typos and realistic workplace references.
+
+Return ONLY the enhanced content, no explanations or JSON formatting.

@@ -1,0 +1,181 @@
+Generate realistic calendar event items for this workplace context that DO NOT contain any information helpful for resolving the bottleneck.
+
+## Context
+- **Persona**: {{ world_model.persona_full_name }}
+- **Occupation**: {{ world_model.persona_occupation }}
+- **About**: {{ world_model.persona_about }}
+- **Company**: {{ world_model.organizational_structure.company_name }}
+- **Department**: {{ world_model.organizational_structure.department }}
+- **Team**: {% for rel in world_model.relationships[:5] %}{{ rel.name }}{% if not loop.last %}, {% endif %}{% endfor %}
+
+## Personal Context
+- **Current Priorities**: {{ world_model.personal_context.current_priorities | join(", ") }}
+- **Work Style**: {{ world_model.personal_context.work_style }}
+
+## Bottleneck(s) to AVOID
+**Important**: Generate items that are completely unrelated to this bottleneck, or any problem the user would find important based on their context/personal context:
+- {{ bottleneck.description }}
+
+## Available Actions Context
+The user has access to these types of actions:
+{% for action in actions[:10] %}
+- **{{ action.type }}**: {{ action.description }}
+{% endfor %}
+
+**CRITICAL**: Distractors should relate to similar workplace activities but NOT directly address any of these actions. Create content that might seem relevant to these action types but doesn't actually require or suggest using them.
+
+## Strategic non-actionable calendar event types (generated events should work together/relate)
+Employ these specific distractor strategies to create confusing but non-actionable calendar events:
+
+- **Proposal-Dismissal**: Meeting about a potential bottleneck that gets cancelled or notes indicate it's no longer relevant
+- **Outdated Bottleneck**: Meeting about a bottleneck from months/years ago that's no longer actionable
+- **Awaiting Approval**: Meeting discussing a potential bottleneck that's deprioritized pending long-term executive approval
+- **Unaddressable Distractor**: Meeting about a clear bottleneck that's completely outside the persona's control/authority
+- **Resolved-But-Mentioned**: Meeting discussing a bottleneck-like situation that was already resolved recently
+- **False-Positive-Similarity**: Use similar keywords/entities to the bottleneck but in completely different contexts
+- **Delegation-Complete**: Meeting showing someone else is handling a similar issue, not the user's concern
+- **Contingency-Planning**: Meeting discussing backup plans for hypothetical issues that may never occur
+- **Historical-Reference**: Meeting mentioning similar past problems but emphasizing they're ancient history
+- **Scope-Mismatch**: Meeting about problems in different teams/departments outside the user's authority
+- **Vendor-Dependency**: Meeting blocked on external vendor response or approval outside the persona's control
+
+
+## Requirements
+- Today's date is March 15th, 2025
+- Generate {{ count }} calendar event items, preferably with some related to others but not exposing some mutual problem together.
+- Items should be natural, highly specific workplace calendar events without flashy or dramatic titles
+- They should fit the organizational context
+- They must NOT contain any information that would help identify or resolve the bottleneck
+- They should be about OTHER workplace activities (routine meetings, training, social events, etc.)
+- Any date chosen should be a random date in 2025
+- Include detailed descriptions that contain various agenda items or meeting notes
+- **ACTION-AWARE EVENTS**: Create events that relate to or mention the available actions but do NOT require or suggest using those specific actions
+- **INDIRECT RELEVANCE**: Make events seem very relevant to the priorities, pain points, and action items, but not directly address the bottleneck or present a problem the user would find important based on their context/personal context.
+
+## Few-Shot Examples
+
+{% if difficulty == "easy" %}
+### Easy Difficulty Examples
+
+#### Example 1: Birthday Celebration (When bottleneck is about resource allocation)
+**Bottleneck to avoid**: "The cloud infrastructure budget request submitted to Finance on March 15th is still pending approval, blocking the team from scaling services for Q2 launch."
+
+```json
+{
+  "title": "Celebration for Mike Chen",
+  "start_time": "2025-03-20T15:30:00Z",
+  "end_time": "2025-03-20T16:00:00Z",
+  "location": "Kitchen Area",
+  "attendees": ["Team Members"],
+  "description": "Join us for cake and celebrate Mike's birthday!\n\nCake and drinks provided.\nCard available at reception for signing.",
+  "why_not_satisfy": "This is a birthday celebration event with no connection to budgets or infrastructure"
+}
+```
+
+#### Example 2: Coffee Chat (When bottleneck is about meeting conflicts)
+**Bottleneck to avoid**: "You have two important meetings scheduled at the same time on Tuesday at 2pm: the product roadmap review with the CEO and the client presentation with ABC Corp."
+
+```json
+{
+  "title": "Coffee Chat with New Hire",
+  "start_time": "2025-03-19T10:00:00Z",
+  "end_time": "2025-03-19T10:30:00Z",
+  "location": "Starbucks - Lobby",
+  "attendees": ["You", "Alex Thompson (New QA Engineer)"],
+  "description": "Welcome coffee with our new QA engineer Alex.\n\nGet to know each other and share team culture tips!",
+  "why_not_satisfy": "This is an informal welcome meeting with a new team member, unrelated to any scheduling conflicts"
+}
+```
+
+{% elif difficulty == "medium" %}
+### Medium Difficulty Examples
+
+#### Example 1: Urgent Team Sync (When bottleneck is about resource allocation)
+**Bottleneck to avoid**: "The cloud infrastructure budget request submitted to Finance on March 15th is still pending approval, blocking the team from scaling services for Q2 launch."
+
+```json
+{
+  "title": "URGENT: Engineering All-Hands - Strategic Updates",
+  "start_time": "2025-03-21T14:00:00Z",
+  "end_time": "2025-03-21T15:30:00Z",
+  "location": "Main Conference Room + Zoom (mandatory attendance)",
+  "attendees": ["All Engineering Staff", "Product Leadership", "CTO"],
+  "description": "Critical engineering alignment meeting - attendance required.\n\nAgenda:\n1. Q2 Technical Roadmap Overview (20 min)\n2. New Development Methodology Rollout (25 min)\n3. Performance Review Process Changes (20 min)\n4. Team Restructuring Announcement (15 min)\n5. Open Q&A with Leadership (10 min)\n\n**IMPORTANT**: This meeting contains sensitive information about organizational changes. Please do not forward or discuss details until official announcement.\n\nPre-read materials:\n- Engineering excellence framework (shared yesterday)\n- Q1 retrospective summary\n- New KPI dashboard\n\nNote: Recording will NOT be available due to confidential content.",
+  "why_not_satisfy": "This is an internal engineering meeting about methodology and team structure, unrelated to budget approvals or infrastructure spending"
+}
+```
+
+#### Example 2: Executive Briefing Prep (When bottleneck is about conflicting deadlines and the persona is a software engineer in a non-executive role, and is not invited to the meeting)
+**Bottleneck to avoid**: "The API documentation deadline of April 15th conflicts with the client demo preparation also due April 15th, and you're the lead on both."
+
+```json
+{
+  "title": "Executive Briefing Preparation - Time Sensitive",
+  "start_time": "2025-04-09T09:00:00Z",
+  "end_time": "2025-04-09T11:00:00Z",
+  "location": "Board Room (no remote option)",
+  "attendees": ["Department Heads", "Senior Leadership", "Finance Team"],
+  "description": "Preparation session for Q2 board meeting presentations.\n\n**Critical Action Items Before Meeting:**\n- Review financial projections deck (v3.2)\n- Prepare 2-minute elevator pitch for your department\n- Bring printed copies of KPI reports\n\n**Presentation Order:**\n1. Sales Performance & Pipeline (Sarah)\n2. Product Development Updates (Michael)\n3. Customer Success Metrics (Jennifer)\n4. Engineering Velocity Report (You - 15 min slot)\n5. Marketing Campaign ROI (Lisa)\n\n**Your Section Requirements:**\n- Team productivity metrics\n- Technology investment outcomes\n- Talent acquisition update\n- Risk mitigation strategies\n\n**Important**: CEO specifically requested detailed metrics on team efficiency. CFO will be scrutinizing all numbers. Previous presenter was questioned for 30 minutes - be prepared!\n\nMandatory dry run scheduled. No exceptions.",
+  "why_not_satisfy": "This is a board meeting preparation session focused on metrics and department updates, not related to API documentation or client demos"
+}
+```
+
+{% else %}  {# hard difficulty #}
+### Hard Difficulty Examples
+
+#### Example 1: CRITICAL: Compliance Review Meeting (When bottleneck is about stakeholder availability) (Persona is Michael, a product manager)
+**Bottleneck to avoid**: "The product design review requires approval from VP of Design who is on vacation until April 20th, but the development team needs to start implementation by April 10th."
+
+```json
+{
+  "title": "🚨 CRITICAL: SOC2 Compliance Emergency Session - Immediate Action Required",
+  "start_time": "2025-04-07T13:00:00Z",
+  "end_time": "2025-04-07T16:00:00Z",
+  "location": "Secure Conference Room A (badges required)",
+  "attendees": ["All Team Leads", "Security Team", "Legal", "External Auditors", "C-Suite"],
+  "description": "Urgent compliance manner - mandatory attendance. Our SOC2 audit revealed critical findings requiring immediate remediation. Failure to address by April 12th risks our enterprise contracts.\n\n**Pre-Meeting Requirements (Complete by 11 AM):**\n1. Review attached 47-page audit findings document\n2. Complete security questionnaire for your team\n3. Prepare remediation timeline for your area\n4. Document all third-party data processors\n\n**Agenda:**\n• 1:00-1:30: Auditor presents critical findings\n• 1:30-2:15: Department-specific vulnerabilities deep dive\n• 2:15-2:30: Legal implications & contract risk assessment\n• 2:30-3:15: Remediation planning workshop\n• 3:15-3:45: Resource allocation & emergency budget\n• 3:45-4:00: Executive sign-off on action plan\n\n**Jenna's Action Items:**\n- Access control audit for your systems\n- Data retention policy compliance check\n- Vendor security assessments\n- Update incident response procedures\n\n**Critical Context:**\n- $2.3M enterprise deal contingent on compliance\n- Board briefing scheduled for April 14th\n- Competitor just failed similar audit (public PR disaster)\n- Insurance requires compliance for cyber coverage\n\n**Bring:**\n- Laptop with VPN access\n- All system architecture diagrams\n- List of all data access points\n- Emergency contact info for key vendors\n\nNO RECORDINGS. NO EXTERNAL COMMUNICATIONS.\n\nFailure to attend requires CEO approval. Contact Legal immediately if you cannot attend.\n\n- Compliance Team",
+  "why_not_satisfy": "This is an urgent compliance meeting about SOC2 audit findings and security vulnerabilities, completely unrelated to product design reviews or stakeholder approvals, and not requiring any immediate action on the part of the user"
+}
+```
+
+#### Example 2: Revenue Impact - Escalation Required (When bottleneck is about meeting scheduling conflicts)
+**Bottleneck to avoid**: "The quarterly board presentation on May 1st at 2pm conflicts with the already-scheduled all-hands meeting that includes a major product announcement."
+
+```json
+{
+  "title": "Engineering Demo Day and Important Deadlines",
+  "start_time": "2025-04-24T16:00:00Z",
+  "end_time": "2025-04-24T17:30:00Z",
+  "location": "Main Conference Room + Live Stream",
+  "attendees": ["All Engineering", "Product Managers", "Interested Parties"],
+  "description": "Monthly Engineering Demos are happening this Friday at 4pm, and attendance is encouraged - Show off what you've built!\n\nPresentation Schedule:\n1. Mobile Team (4:00-4:15)\n   - New gesture navigation\n   - Performance improvements demo\n\n2. Backend Team (4:15-4:30)\n   - GraphQL implementation\n   - Caching layer optimization\n\n3. Data Team (4:30-4:45)\n   - Real-time analytics pipeline\n   - ML model improvements\n\n4. Infrastructure (4:45-5:00)\n   - Kubernetes migration update\n   - Cost optimization results\n\n5. Q&A and Discussion (5:00-5:30)\n\nGuidelines:\n- 10 min presentations, 5 min Q&A\n- Focus on demos over slides\n- Share any code snippets in #eng-demos channel\n\nRefreshments provided!\n\nCan't make it? All demos will be recorded and posted to the engineering wiki. Other imporant updates: Alexander, Jason, and Alicia will be out of office next week and will be unavailable for communication. If you've got something to ask for, please do this today or tomorrow! Have a great week and let's ship this product ASAP!",
+  "why_not_satisfy": "This is an internal engineering demo session focused on technical presentations, not related to board meetings or scheduling conflicts. Also, all people listed in this instance are unrelated to the bottleneck itself."
+}
+```
+
+#### Example 3: Architecture Review (When bottleneck is about dependency delays)
+**Bottleneck to avoid**: "The backend API development is blocked waiting for the authentication service specifications from the Security team, who haven't responded to requests sent two weeks ago."
+
+```json
+{
+  "title": "Current Architecture Review",
+  "start_time": "2025-03-18T14:00:00Z",
+  "end_time": "2025-03-18T15:30:00Z",
+  "location": "Conference Room A / Virtual",
+  "attendees": ["Engineering Leads", "Architecture Team", "DevOps", "Product Technical Liaisons"],
+  "description": "Important and timely architecture and design review session\n\nAgenda:\n1. Review of submitted design proposals (20 min)\n   - Mobile app offline sync architecture\n   - Data warehouse migration approach\n   - Microservices communication patterns\n\n2. Technical debt prioritization (20 min)\n   - Legacy system deprecation timeline\n   - Database schema improvements\n   - API versioning strategy\n\n3. Performance optimization initiatives (20 min)\n   - Recent bottleneck analysis results\n   - Caching strategy improvements\n   - Query optimization wins\n\n4. Upcoming technology evaluations (15 min)\n   - GraphQL vs REST for new services\n   - Container orchestration options\n   - Monitoring tool comparison\n\n5. Open discussion and Q&A (15 min)\n\nPlease submit any design documents for review at least 24 hours before the meeting.\n\nPre-read materials available in Confluence under /architecture/reviews/2025-03-18",
+  "why_not_satisfy": "This is a regular architecture review meeting focused on various technical topics, with no mention of authentication services or security team dependencies"
+}
+```
+{% endif %}
+
+Generate a JSON array with {{ count }} items. Each item should have:
+- title: Event title
+- start_time: ISO format start time
+- end_time: ISO format end time
+- location: Meeting location
+- attendees: List of attendees
+- description: Event description
+- why_not_satisfy: Brief explanation of why this doesn't help with the bottleneck or introduce a new problem / bottleneck that {{ world_model.persona_full_name }} would find important and actionable (by him specifically!!).
+
+Return ONLY the JSON array, no other text.

@@ -1,0 +1,84 @@
+Generate realistic {{ kind }} items for this workplace context that DO NOT contain any information helpful for resolving the bottleneck. Note that these should be in the desired word count.
+
+## Context
+- **Persona**: {{ world_model.persona_full_name }}
+- **Occupation**: {{ world_model.persona_occupation }}
+- **About**: {{ world_model.persona_about }}
+- **Company**: {{ world_model.organizational_structure.company_name }}
+- **Department**: {{ world_model.organizational_structure.department }}
+- **Team Size**: {{ world_model.organizational_structure.team_size }}
+- **Colleagues**: {% for rel in world_model.relationships[:5] %}{{ rel.name }} ({{ rel.type.value }}){% if not loop.last %}, {% endif %}{% endfor %}
+
+## Personal Context
+- **Work Style**: {{ world_model.personal_context.work_style }}
+- **Current Priorities**: {{ world_model.personal_context.current_priorities | join(", ") }}
+- **Pain Points**: {{ world_model.personal_context.pain_points | join(", ") }}
+
+## Bottleneck(s) to AVOID
+**Important**: Generate items that are completely unrelated to this bottleneck, or any problem the user would find important based on their context/personal context:
+- {{ bottleneck.description }}
+
+## Requirements
+- Generate {{ count }} {{ kind }} items
+- Items should be natural, highly specific workplace / personal communications
+- They should fit the organizational context or reference some personal context
+- They must NOT contain any information that would help identify or resolve the bottleneck, or any problem the user would find important based on their context/personal context.
+- They should be about OTHER workplace topics (team events, unrelated projects, routine updates, etc.)
+- Any date chosen should be a random date in 2025
+{% if kind == "email" %}- Email body length: {{ min_words }}-{{ max_words }} words
+{% elif kind == "document" %}- Document body length: {{ min_words }}-{{ max_words }} words
+{% endif %}
+
+## Distractor Strategy Types
+Use these specific distractor strategies to create confusing but non-actionable content:
+
+### Classic Distractors
+- Code review approvals for unrelated work
+- Office maintenance notices
+- Requests for very non-urgent aid in less important projects
+- Correspondences about issues that are absolutely non-actionable by the persona
+- Successful project completion updates
+- Holiday schedules and social committee events
+- Training opportunities and educational content
+- Routine system status reports (healthy/normal operations)
+- Technical documentation for completed features
+- Performance metrics showing normal performance
+- Personal updates from family members
+
+### Strategic Confusion Distractors
+- **Proposal-Dismissal**: Generate one distractor that proposes a potential bottleneck, but another document/person claims it is no longer relevant
+- **Outdated Bottleneck**: Suggest a bottleneck that is from too long ago to still be actionable (months/years old)
+- **Awaiting Approval**: Documents detail prevalence of a potential bottleneck, but another document details that it is deprioritized until long-term approval from CEO/executive comes in
+- **Unaddressable Distractor**: Clearly a bottleneck, but completely unaddressable by the actions of the persona
+- **Resolved-But-Mentioned**: Discuss a bottleneck-like situation but indicate it was already resolved or fixed recently
+- **False-Positive-Similarity**: Use similar keywords/entities to the bottleneck but in completely different contexts
+- **Delegation-Complete**: Show someone else is handling a similar issue, making it not the user's concern
+- **Contingency-Planning**: Discuss backup plans for potential issues that may never occur
+- **Historical-Reference**: Mention similar past problems but emphasize they're ancient history
+- **Scope-Mismatch**: Problems in different teams/departments that the user has no authority over
+
+Generate a JSON array with {{ count }} items. Each item should have:
+{% if kind == "email" %}
+- subject: Natural email subject
+- sender: Realistic sender email
+- to: List of recipients
+- cc: List of CC recipients (can be empty)
+- timestamp: ISO format timestamp
+- body: Email content ({{ min_words }}-{{ max_words }} words)
+- why_not_satisfy: Brief explanation of why this doesn't help with the bottleneck
+{% elif kind == "calendar" %}
+- title: Event title
+- start_time: ISO format start time
+- end_time: ISO format end time
+- location: Meeting location
+- attendees: List of attendees
+- description: Event description
+- why_not_satisfy: Brief explanation of why this doesn't help with the bottleneck
+{% elif kind == "document" %}
+- title: Document title
+- mime: "text/markdown" or "text/csv"
+- content: Document content ({{ min_words }}-{{ max_words }} words)
+- why_not_satisfy: Brief explanation of why this doesn't help with the bottleneck
+{% endif %}
+
+Return ONLY the JSON array, no other text.

@@ -1,0 +1,19 @@
+# Ablation Study Configuration: GPT-4.1
+# Use this configuration to generate data using ONLY GPT-4.1
+mode: batch
+count: 11
+difficulty: hard
+start_persona_index: 0
+output_directory: generated_data/ablation_gpt41
+generate_distractors: true
+distractor_count: 75
+prepare_annotations: true
+coordinated_generation: true
+
+# CRITICAL: Set use_multi_llm to false for ablation study
+use_multi_llm: false
+llm_model: gpt-4.1
+
+parallel: true
+max_workers: 8
+

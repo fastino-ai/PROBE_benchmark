@@ -1,0 +1,54 @@
+You are tasked with generating a realistic personal work context for a professional based on their LinkedIn profile.
+
+PERSONA INFORMATION:
+- Name: {{ persona.name }}
+- Occupation: {{ persona.occupation }}
+- Location: {{ persona.location }}
+- About: {{ persona.about }}
+
+DIFFICULTY LEVEL: {{ difficulty }}
+
+Generate a simplified personal context that captures the essence of how this person works and what they're focused on.
+
+OUTPUT FORMAT:
+Return a JSON object with the following fields:
+
+{
+  "work_style": "Brief description of their work approach and habits",
+  "communication_preferences": ["Array of preferred communication methods"],
+  "current_priorities": ["Array of current top priorities"],
+  "pain_points": ["Array of current challenges or pain points"]
+}
+
+IMPORTANT: All array fields must contain simple strings only. Do not use objects or nested structures.
+
+{% if difficulty == "easy" %}
+Keep the context simple:
+- Straightforward work style description
+- 2-3 communication preferences
+- 2-3 clear priorities
+- 1-2 pain points
+{% elif difficulty == "medium" %}
+Add moderate complexity:
+- Nuanced work style with some trade-offs mentioned
+- 3-4 communication preferences with context
+- 3-5 priorities that may compete for attention, a bit more specific
+- 3-4 pain points that interconnect, contextualized by the "about" section
+{% elif difficulty == "hard" %}
+Create complex context:
+- Complex work style balancing multiple competing demands
+- 4-5 communication preferences with specific contexts
+- 5-7 priorities with clear conflicts and dependencies, relatively specific.
+- 5-6 pain points that create systemic challenges, contextualized by the "about" section
+{% endif %}
+
+Make sure the personal context aligns with:
+1. The persona's role and seniority level
+2. Their industry norms
+3. The responsibilities implied by their occupation
+4. Any hints from their "about" section
+
+
+Note: Pain points should be the sort resolvable by a human assistant / employee.
+
+Generate a realistic, coherent personal context that would make sense for this specific professional.

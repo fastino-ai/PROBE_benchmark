@@ -1,0 +1,186 @@
+Generate realistic email items for this workplace context that DO NOT contain any information that mentions any of the  bottleneck. Note that these should be in the desired word count.
+
+## Context
+- **Persona**: {{ world_model.persona_full_name }}
+- **Occupation**: {{ world_model.persona_occupation }}
+- **About**: {{ world_model.persona_about }}
+- **Company**: {{ world_model.organizational_structure.company_name }}
+- **Department**: {{ world_model.organizational_structure.department }}
+- **Team Size**: {{ world_model.organizational_structure.team_size }}
+- **Colleagues**: {% for rel in world_model.relationships[:5] %}{{ rel.name }} ({{ rel.type.value }}){% if not loop.last %}, {% endif %}{% endfor %}
+
+## Available Email Addresses
+**IMPORTANT**: Use ONLY these real email addresses from the world model relationships (do NOT invent new ones):
+{% for rel in world_model.relationships[:8] %}
+- **{{ rel.name }}**: {{ rel.name.lower().replace(' ', '.') }}@{{ world_model.organizational_structure.company_name.lower().replace(' ', '').replace('.', '') }}.com
+{% endfor %}
+
+## Personal Context
+- **Work Style**: {{ world_model.personal_context.work_style }}
+- **Current Priorities**: {{ world_model.personal_context.current_priorities | join(", ") }}
+- **Pain Points**: {{ world_model.personal_context.pain_points | join(", ") }}
+
+## Bottleneck(s) to AVOID
+**CRITICAL**: Generate items that are completely unrelated to this bottleneck and contain NO information that could help identify, understand, or resolve it:
+- {{ bottleneck.description }}
+
+**CONTAMINATION PREVENTION**: Emails must NOT contain:
+- Any direct or indirect references to the bottleneck situation
+- Any problems, delays, conflicts, or issues that could be confused with the bottleneck
+- Any information that would be useful for resolving the bottleneck
+- Any context clues that might hint at the existence of a serious issue that {{ world_model.persona_full_name }} would find important and actionable (by him specifically!!)
+
+## Available Actions Context
+The user has access to these types of actions:
+{% for action in actions[:10] %}
+- **{{ action.type }}**: {{ action.description }}
+{% endfor %}
+
+**STRATEGIC DISTRACTION**: Items should leverage context, personal context, and available actions to create realistic workplace content that appears relevant but is completely unrelated to any bottlenecks. Create content that mentions action types in passing or as background context, but does NOT suggest using them for problem-solving or present any situations requiring action.
+
+## Requirements
+- Generate {{ count }} email items
+- Items should be natural, highly specific workplace / personal communications without flashy or dramatic titles
+- They should fit the organizational context and reference occasional details of the world model
+- **ZERO BOTTLENECK CONTAMINATION**: Items must contain absolutely NO information that would help identify, understand, or resolve the bottleneck
+- **NO PROBLEM CONTENT**: Avoid presenting ANY problems, issues, delays, conflicts, or situations requiring action from {{ world_model.persona_full_name }}!!
+- They should be about completely unrelated workplace topics (team events, celebrations, routine updates, informational content, etc.)
+- Today's date is March 15th, 2025, so any dates should be in the near past or future
+- Email body length: {{ min_words }}-{{ max_words }} words
+- **ACTION-AWARE EMAILS**: Create emails that relate to or mention the available actions but do NOT require or suggest using those specific actions (ex: "if action is escalate_to_manager, then email should say something like "escalating this issue to management might be an option, but I'm not sure if it's the best course of action" or "we may need to escalate this to management if all of other preliminary attempts fail")
+- **INDIRECT RELEVANCE**: Make emails seem very relevant to the priorities, pain points, and action items, but not directly address the bottleneck or present a problem the user would find important based on their context/personal context.
+
+## Strategic Distractor Types
+Employ these specific distractor strategies to create confusing but non-actionable emails:
+
+- **Proposal-Dismissal**: Email proposing a potential bottleneck, but with follow-up replies claiming it's no longer relevant
+- **Outdated Bottleneck**: Email about a bottleneck from months/years ago that's no longer actionable
+- **Awaiting Approval**: Emails detailing a potential bottleneck that's deprioritized pending long-term executive approval
+- **Unaddressable Distractor**: Email about a clear bottleneck that's completely outside the persona's control/authority
+- **Resolved-But-Mentioned**: Email discussing a bottleneck-like situation that was already resolved recently
+- **False-Positive-Similarity**: Use similar keywords/entities to the bottleneck but in completely different contexts
+- **Delegation-Complete**: Email showing someone else is handling a similar issue, not the user's concern
+- **Contingency-Planning**: Email discussing backup plans for hypothetical issues that may never occur
+- **Historical-Reference**: Email mentioning similar past problems but emphasizing they're ancient history
+- **Scope-Mismatch**: Email about problems in different teams/departments outside the user's authority
+
+## Anti-Bias Requirements (CRITICAL)
+- **POPULATE RECIPIENTS**: Always include realistic to/cc fields with 1-3 addresses
+- **CREATE RED HERRINGS**: Include names/terms that COULD be confused with bottleneck elements / actions
+- **VARY SPECIFICITY**: Make some extremely specific emails, but never reference bottleneck.
+- **TEMPORAL SPREAD**: Use dates from March 10-20, not all March 15th
+- **MIXED LENGTHS**: Vary between short updates and longer discussions
+- **PARTIAL RELEVANCE**: Include content that's tangentially related to work areas
+
+## Few-Shot Examples
+
+{% if difficulty == "easy" %}
+### Easy Difficulty Examples
+
+#### Example 1: Office Event Email (When bottleneck is about delayed feedback)
+**Bottleneck to avoid**: "The Q3 marketing strategy document sent to Sarah Chen on September 15th is still awaiting her feedback, which is blocking the campaign launch scheduled for October 1st."
+
+```json
+{
+  "subject": "Team Updates and Q3 DevOps Document Review",
+  "sender": "[use actual colleague email from Available Email Addresses section]",
+  "to": ["team@company.com"],
+  "cc": [],
+  "timestamp": "2025-09-19T11:00:00Z",
+  "body": "Hi everyone,\n\nHope you're all having a productive week! I wanted to share a few updates and get some final input on our Q3 initiatives.\n\n**Project Updates:**\n- The mobile app optimization is ahead of schedule and should be ready for QA testing by Friday\n- Customer dashboard redesign received positive feedback from the beta group - 89% approval rating!\n- API response time improvements are showing 23% performance gains in testing\n- Security audit prep is complete - we're ready for next week's review\n\n**Team Achievements:**\n- Congratulations to Mike on completing his AWS Solutions Architect certification!\n- Our team's bug resolution rate improved by 31% this quarter\n- Zero production incidents for the past 6 weeks - excellent work everyone\n\n**Upcoming Events:**\n- Team lunch next Thursday at Mario's Italian Restaurant (12:30 PM)\n- Quarterly all-hands meeting on September 28th in the main auditorium\n- New hire orientation sessions starting October 2nd - please welcome our three new team members\n\n**DevOps Document Feedback Request:**\nI'm still gathering final thoughts on the Q3 devops strategy document that Tom has been leading. I know most of you have already provided your input (thank you!), but if you haven't had a chance yet, please take a quick look when convenient. The feedback will help us refine our approach before the sprint launch on October 1st. Here's the document link: [www.company.com/devops-strategy-q3]\n\n**Reminders:**\n- Please submit your time-off requests for the upcoming holidays\n- Don't forget about the optional Git workshop this Friday at 2 PM\n- The office coffee machine has been fixed - enjoy your lattes!\n\n**Office Updates:**\n- Parking lot maintenance is scheduled for next Monday (alternative parking info will be sent separately)\n- New ergonomic chairs arrive next week - facilities will coordinate installation\n\nThanks for all your hard work, and have a great rest of the week!\n\nBest regards,\nSarah\n\n P.S. - The team photos from last month's offsite are now available in our shared drive under /team-events/september-retreat",
+  "why_not_satisfy": "This email is about general team updates and gathering feedback on a devops document that Tom owns, completely unrelated to the bottleneck. Since Tom is the document owner, he doesn't need to comment on his own work, and the team has already been asked to review it."
+}
+```
+
+#### Example 2: Parking Update (When bottleneck is about budget approval)
+**Bottleneck to avoid**: "The cloud infrastructure expansion budget request submitted to Finance on August 30th hasn't been approved, preventing the team from scaling services for the upcoming product launch."
+
+```json
+{
+  "subject": "February Office Updates and Parking Improvements",
+  "sender": "[use actual colleague email from Available Email Addresses section]",
+  "to": ["all-staff@company.com"],
+  "cc": [],
+  "timestamp": "2025-09-01T08:30:00Z",
+  "body": "Good morning everyone,\n\nI hope February is off to a great start for everyone! We have several important updates and improvements planned for this month that will enhance our workplace experience.\n\n**Parking Lot Improvements:**\nOur main parking lot will undergo much-needed repaving this Thursday and Friday (February 6-7). This project will provide better lighting, smoother surfaces, and improved drainage for the rainy season.\n\nAlternative parking options during construction:\n- Street parking on Oak Avenue (free, 2-hour limit)\n- Public garage on 5th Street ($10/day, company will reimburse - submit receipts to HR)\n- Overflow lot behind Building C (free, but limited spaces)\n- Park & Ride lot at Metro Station (free shuttle service provided)\n\n**Shuttle Service Details:**\nComplimentary shuttle service will run every 15 minutes between 7:00 AM and 7:00 PM from the public garage and Park & Ride lot directly to our office entrance. Look for the bright blue shuttles with our company logo.\n\n**February Building Improvements:**\n- HVAC system maintenance scheduled for February 12-13 (some areas may be warmer/cooler)\n- New LED lighting installation in common areas starts February 18th\n- Conference room AV equipment upgrades begin February 20th\n- Lobby furniture refresh planned for February 25th\n\n**Safety Reminders:**\n- Please use designated walkways during construction\n- Construction crews will be on-site from 6:00 AM to 6:00 PM\n- Report any safety concerns immediately to facilities\n- Keep personal vehicles clear of construction zones\n\n**Other February Updates:**\n- New coffee selections available in all break rooms\n- Monthly fire drill scheduled for February 15th at 10:30 AM\n- Building security system upgrade (minimal disruption expected)\n- Visitor parking will be temporarily relocated to the south lot\n\n**Contact Information:**\nFor any questions or concerns during this period, please contact our facilities team at 555-743-6922 or email facilities@company.com. We'll also post daily updates on the company intranet.\n\nThank you for your patience as we make these important improvements to our workspace!\n\nBest regards,\nFacilities Management Team",
+  "why_not_satisfy": "This email is about parking maintenance and general office improvements, completely unrelated to budgets or infrastructure expansion requests. The parking maintenance presents no real solvable problems since alternative parking and shuttle service are provided."
+}
+```
+
+{% elif difficulty == "medium" %}
+### Medium Difficulty Examples
+
+#### Example 1: Team Building Event (When bottleneck is about delayed feedback)
+**Bottleneck to avoid**: "The Q3 marketing strategy document sent to Sarah Chen on September 15th is still awaiting her feedback, which is blocking the campaign launch scheduled for October 1st."
+
+```json
+{
+  "subject": "Large scale notice on upcoming work necessities",
+  "sender": "[use actual colleague email from Available Email Addresses section]",
+  "to": ["all-team@company.com"],
+  "cc": [],
+  "timestamp": "2025-09-18T10:30:00Z",
+  "body": "Team,\n\nQuick update on this week's activities and upcoming cross-functional initiatives. Hope everyone is having a productive September!\n\n**System Maintenance Update:**\n- Database optimization completed ahead of schedule thanks to Linda and Justin's excellent partnership on this project. I think Tom has sent out a doc approval for everyone to read, which should be enjoyable!\n- API response times improved by 15% post-maintenance - excellent work by the infrastructure team\n- All monitoring systems are showing green across production environments\n- Zero downtime during the maintenance window - kudos to DevOps!\n\n**Cross-Departmental Team Building Initiative - September 26th:**\nAs part of our Q3 collaboration enhancement program, we're implementing a problem-solving exercise at Puzzle Masters Downtown. This should be a fun way to strengthen our cross-team relationships while practicing collaborative skills.\n\n**Technical Details:**\n- Date: Friday, September 26th, 15:00-18:00\n- Location: 123 Main Street (GPS coordinates in shared calendar)\n- Participant allocation: 4-5 person cross-functional teams\n- Objective: Collaborative problem-solving simulation with real-world scenarios\n- Duration: 3 hours including breaks and debrief\n\n**Logistics:**\n- Transport: Company shuttle departing 14:45 from main lobby (sign-up required)\n- Alternative: Direct venue arrival accepted (parking available on-site)\n- Post-session debrief dinner at Mario's Italian Restaurant (expense code: TEAM-BUILD-Q3)\n- Calendar blocks have been automatically scheduled - please check your calendars\n\n**Resource Requirements:**\n- No specialized equipment needed - venue provides all materials\n- Business casual attire recommended (comfortable shoes suggested)\n- Venue confirmed ADA compliant with elevator access\n- Dietary accommodation requests: reply by EOD Wednesday to hr@company.com\n- Bring your creativity and collaborative spirit!\n\n**Team Composition Strategy:**\nMarketing, Engineering, and Sales personnel will be distributed across teams to optimize knowledge transfer and inter-departmental communication protocols. Each team will have a mix of seniority levels and functional expertise.\n\n**Learning Objectives:**\n- Practice cross-functional problem-solving\n- Develop communication skills in mixed groups\n- Build stronger relationships across departments\n- Apply design thinking methodologies to business challenges\n\n**Documentation:**\nHR will capture event metrics for quarterly team effectiveness reporting. Participation is voluntary - opt-out available via direct communication with Lisa Chen if needed.\n\nThis initiative supports our ongoing efforts to strengthen collaborative workflows and problem-solving methodologies across departments. The feedback from our last team building event was overwhelmingly positive, so we're excited to build on that success.\n\n**Next Steps:**\n- Please confirm attendance by Wednesday for final headcount\n- Transportation arrangements must be finalized by Thursday\n- Any questions? Reach out to the operations team\n\nLooking forward to seeing everyone there!\n\nRegards,\nAlex\nTeam Operations Coordinator\n\nNote: Standard company event cancellation procedures apply. Weather backup plan available if needed.",
+  "why_not_satisfy": "This email is about a social team building event and contains no information about any pending feedback, documents, or marketing strategies"
+}
+```
+
+#### Example 2: Training Announcement (When bottleneck is about budget approval)
+**Bottleneck to avoid**: "The cloud infrastructure expansion budget request submitted to Finance on August 30th hasn't been approved, preventing the team from scaling services for the upcoming product launch."
+
+```json
+{
+  "subject": "Office Move and Company-wide changes",
+  "sender": "[use actual colleague email from Available Email Addresses section]",
+  "to": ["engineering-all@company.com"],
+  "cc": ["learning-development@company.com"],
+  "timestamp": "2025-09-22T14:15:00Z",
+  "body": "Hello Engineering Team,\n\nI'm excited to share important updates about our upcoming office move and several company-wide changes that will impact our team.\n\n**Office Relocation Details:**\nWe'll be moving to our new headquarters at 1500 Innovation Drive on October 15th. The new space features:\n- Open collaboration areas with standing desks\n- Dedicated quiet zones for focused work\n- State-of-the-art meeting rooms with upgraded AV equipment\n- On-site gym and wellness center\n- Electric vehicle charging stations\n\n**Recently Resolved Issues:**\nGood news - several challenges from last month have been successfully addressed:\n- The server capacity issues that were affecting deployment speeds? Completely resolved with our new infrastructure upgrade last week\n- The budget approval delays for the Q4 marketing campaigns have been finalized - Finance approved everything on Friday\n- Remember the conflict between the mobile app redesign and API v3 timelines? The leadership team worked out a resource reallocation plan and both projects are back on track\n- The authentication service specifications that were holding up backend development finally came through from Security - development resumed Monday\n\n**Packing Schedule:**\nWe request that everyone share this email thread with any colleagues who have yet to receive it to ensure company-wide circulation. We also recommend that you show up to office early next week to attend our new headquarters tour!\n- Sept 30: IT will provide moving boxes and labels\n- Oct 8-10: Professional movers will pack common areas\n- Oct 11-12: Personal desk items should be packed\n\n**Long-term Planning Items (Awaiting Executive Approval):**\nSeveral strategic initiatives are currently in the executive review pipeline, pending long-term approval from the CEO's office:\n- The proposed expansion into European markets (detailed business case submitted, awaiting Q1 2026 strategic review)\n- Office space lease extensions for our satellite locations (facilities team has prepared comprehensive proposals, awaiting board-level approval)\n- The comprehensive employee training program redesign (HR has completed all planning, but implementation is on hold pending budget cycle approval)\n\nThese items aren't blocking any immediate work - just keeping you informed of the bigger picture planning that's happening at the executive level.\n\n**New Policies Starting November 1st:**\n1. Hybrid Work Model: 3 days in-office (Tuesday-Thursday), 2 days remote\n2. Core Hours: 10 AM - 3 PM for better cross-team collaboration\n3. Hot-desking system for optimal space utilization\n4. Enhanced sustainability initiatives (paperless meetings, composting stations)\n\n**Technology Updates:**\n- New badge access system (pick up badges from Security by Oct 10)\n- Upgraded conference room booking app launching Oct 1\n- Cloud-based phone system replacing desk phones\n\n**Employee Perks:**\n- Catered lunch on Wednesdays\n- Monthly team building budget increase to $150/person\n- New commuter benefits program\n\n**Historical Context:**\nFor those who've been here a while, this move reminds me of our 2019 office transition. Back then we had similar concerns about productivity during the move, but it turned out to be one of our most successful quarters! The team adapted beautifully and we actually saw improved collaboration afterwards.\n\n**Housekeeping Reminders:**\n1. Update your address in the HR system when convenient\n2. New parking permits available at Security office\n3. Office orientation scheduling is open in the HR portal\n\nPlease reach out if you have questions. Looking forward to this exciting transition!\n\nBest regards,\nSarah\n\nP.S. - We're hosting a farewell party for the old office on Oct 13 at 4 PM!",
+  "why_not_satisfy": "This email is about office relocation and new company policies, containing no information about budgets, infrastructure investments, or financial approvals. It does not contain any actual issues."
+}
+```
+
+{% else %}  {# hard difficulty #}
+### Hard Difficulty Examples
+
+#### Example 1: Weekly Security Update (When bottleneck is about meeting conflicts)
+**Bottleneck to avoid**: "You (Jack) have two important meetings scheduled at the same time on Tuesday at 2pm: the product roadmap review with the CEO and the client presentation with ABC Corp."
+
+```json
+{
+  "subject": "Weekly Security Scan Results - Urgent items to address",
+  "sender": "[use actual colleague email from Available Email Addresses section]",
+  "to": ["it-security@company.com"],
+  "cc": ["infrastructure@company.com"],
+  "timestamp": "2025-03-17T08:00:00Z",
+  "body": "Morning team,\n\nWeekly security scan results for March 14th. Some interesting findings this week that I wanted to share with everyone.\n\n**Vulnerability Assessment - Project Fortress:**\nRan our comprehensive scan across 247 systems in the infrastructure. The automated pipeline flagged a few items:\n- Critical vulnerabilities: 0\n- High severity: 0 \n- Medium severity: 3 (remediation completed during Tuesday maintenance)\n- Low severity: 12 (queued for next maintenance window)\n\nThat endpoint issue we discovered last week on Melissa's workstation has been contained. The EDR system caught it quickly and we've completed the investigation - no evidence of lateral movement or data exfiltration.\n\n**Infrastructure Compliance Status:**\n- Windows server environment: 100% patched to current baselines\n- Linux production systems: 100% compliant with security standards\n- Network devices: 98% up-to-date (2 edge routers need reboot after firmware update)\n- Workstation fleet: 96% current on security patches\n\n**Threat Landscape Update:**\nOur perimeter defenses intercepted some notable activity:\n- Firewall blocked 1,247 suspicious IP addresses attempting connections\n- Email security gateway filtered 15,892 spam and phishing attempts\n- Zero successful unauthorized access events detected\n- Certificate management system shows all SSL certs valid through June\n\n**Recently Addressed Items:**\nJust to close the loop on some previous concerns - the LDAP authentication latency issues that were causing SSO delays got resolved when the network team implemented the new load balancers last month. Also, those certificate expiration alerts for the API gateway are no longer triggering since we renewed everything and set up automated monitoring.\n\nThe firewall rule conflicts between DMZ and internal networks that infrastructure was troubleshooting? Those configuration issues were sorted out and we're seeing clean traffic flow now.\n\n**Strategic Security Planning:**\nA few longer-term initiatives are working through the planning pipeline - Zero Trust architecture evaluation is in the business case phase for 2026 budget consideration. The advanced threat hunting platform upgrade has completed vendor assessment and is awaiting CIO review. Employee security training modernization is also in development with HR for next fiscal cycle implementation.\n\n**This Week's Completions:**\n✅ Quarterly password policy compliance audit\n✅ WAF rule updates for emerging attack patterns\n✅ Security awareness training deployment for new hires\n✅ Backup restoration testing validation\n✅ Incident response playbook exercises\n\n**Scheduled Maintenance:**\n- March 21st: Firewall firmware updates (11 PM - 1 AM)\n- March 28th: Email system security patches (6 AM - 7 AM) \n- April 4th: Annual penetration testing kickoff\n\n**Security Awareness:**\nExcellent results on last week's phishing simulation - 94% identification and reporting rate! The email filters just caught an amusing attempt - someone claiming to be a Nigerian prince offering $40 million. That's our highest fake payout offer yet.\n\nRemember back in 2020 when we transitioned to remote work? Similar concerns about endpoint security, but our metrics actually improved with better awareness and monitoring.\n\n**General Notes:**\n- Mobile security updates available through device management portal\n- Suspicious email reporting via Outlook plugin or security@company.com\n- Q1 security training at 87% completion - portal open through March 31st\n\nProject Hardening automation features roll out next week. Will send details on the enhanced monitoring capabilities.\n\nStay sharp,\nDavid\nSenior Security Engineer\n\nP.S. - Coffee and pastries in the security office Friday morning for anyone interested in InfoSec career discussions!",
+  "why_not_satisfy": "This email is a routine update, even though it is titled 'urgent items to address', it does not contain any information about urgent bottlenecks that are actionable or pertain to the user at the moment, so it is a distractor."
+}
+```
+
+#### Example 2: Direct Email Correspondene from department head (When bottleneck is about stakeholder approval delays)
+**Bottleneck to avoid**: "The product design review requires approval from VP of Design who is on vacation until April 20th, but the development team needs to start implementation by April 10th."
+
+```json
+{
+  "subject": "Caching Layer Deployment",
+  "sender": "[use actual colleague email from Available Email Addresses section]",
+  "to": ["brian_cfo@company.com"],
+  "cc": ["engineering-all@company.com"],
+  "timestamp": "2025-04-05T09:00:00Z",
+  "body": "Hello Engineering Team!\n\n Spring is here and so are lots of exciting updates!\n\n**🏆 Team Achievements:**\n- Successfully deployed the new caching layer - 40% performance improvement - thanks Thomas for all of your help, and for frequent communication with Jack regarding the issue - you've been extremely helpful!\n- Zero downtime for the 6th consecutive month\n- Jennifer Wong's paper on distributed systems accepted at SysConf 2025, so congratulations to her and her team for the tremendous quantity of hard work. Thank you Jennifer for proactively notifying the team on latest research advancements. Bug bash crushed 127 issues in one day 👋 Welcome New Team Members:**\n- David Kim - Senior Backend Engineer (from Netflix)\n- Maria Santos - DevOps Engineer (from Spotify)\n- Alex Thompson - Junior Frontend Developer (new grad from Stanford)\n\nMake sure to say hello when you see them around, and I recommend that if they reach out senior employees attempt to meet with them one or one, ideally setting up some continous cadence of conversation!\n\n**📊 Engineering Metrics:**\n- Sprint velocity: 147 points (up 12%)\n- Code coverage: 86.3% (target: 85%)\n- Build time: 4.2 minutes average, which is a little under target numbers and should be improved by the team throughout this week. \n- PR review time: 8 hours average\n\n**🎓 Learning & Development:**\n- Kubernetes workshop recordings now available on the wiki\n- 15 engineers completed AWS certifications this quarter, but we'd prefer that more complete them next quarter: ideally 30, and we're seeking volunteers. \n- New book club starting: 'Designing Data-Intensive Applications'\n- Tech talk next Thursday: 'Lessons from Building at Scale' by Sarah Chen\n\n**🗓️ Upcoming Events:**\n- April 8: Hack Day (theme: Developer Productivity)\n- April 15: Engineering All-Hands (2 PM, Main Conference Room)\n- April 22-23: Company Offsite in Lake Tahoe\n- May 1: Q2 OKR Planning Session\n\n**💡 Tool Updates:**\n- Upgraded to Jenkins 2.440 - check out the new UI!\n- GitHub Copilot now available for all engineers\n- New monitoring dashboards in Grafana\n- Slack integration for deployment notifications is live\n\n**🍕 Social Corner:**\n- March Madness bracket winner: Tom Liu (perfect Final Four!)\n- Photos from last week's bowling night on the wiki\n- Board game night every Friday in the rec room\n- Running club meets Tuesdays/Thursdays at 6 AM\n\n**📝 Process Reminders:**\n- Please update your OKR progress in Lattice by month-end\n- New PR template is mandatory starting April 1st\n- Remember to tag your tickets with the correct epic\n- On-call schedule for Q2 is posted - check your slots\n\n**🎉 Shoutouts:**\n- Huge thanks to the platform team for the smooth database migration\n- Props to QA for the comprehensive test suite improvements\n- Special recognition to the on-call team for handling last week's incident\n\n**Quote of the Month:**\n'The best error message is the one that never shows up.' - Thomas Fuchs\n\nAs always, my door (virtual or physical) is open. Let me know if you have any questions, concerns, or ideas!\n\nHappy coding!\nRobert Kim\nVP of Engineering\n\nP.S. - Don't forget to submit your conference talk proposals for Q3. We have budget for 20 conference attendances this year!",
+  "why_not_satisfy": "This is a general engineering correspondence with team updates and achievements, containing no information about design reviews, approvals, or stakeholder availability, nor any other problems of any sort"
+}
+```
+{% endif %}
+
+Generate a JSON array with {{ count }} items. Each item should have:
+- subject: Natural email subject
+- sender: Realistic sender email (MUST be from Available Email Addresses section)
+- to: List of recipients
+- cc: List of CC recipients (can be empty)
+- timestamp: ISO format timestamp
+- body: Email content ({{ min_words }}-{{ max_words }} words)
+- why_not_satisfy: Brief explanation of why this doesn't hint at the bottleneck or introduce a new problem / bottleneck that {{ world_model.persona_full_name }} would find important and actionable (by him specifically!!).
+
+Return ONLY the JSON array, no other text.

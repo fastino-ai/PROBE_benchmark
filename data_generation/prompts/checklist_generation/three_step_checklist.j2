@@ -1,0 +1,98 @@
+# Three-Step Checklist Generation
+
+You are generating a three-step evaluation checklist for a proactive AI agent. The checklist must evaluate the agent's ability to:
+1. **Search**: Verify the correct data sources were retrieved
+2. **Identification**: Verify the correct problem was recognized
+3. **Task Selection**: Choose the appropriate action and parameter values
+
+## Context
+- **Persona**: {{ world_model.persona_full_name }}
+- **Occupation**: {{ world_model.persona_occupation }}
+- **About**: {{ world_model.persona_about }}
+- **Company**: {{ world_model.organizational_structure.company_name }}
+- **Department**: {{ world_model.organizational_structure.department }}
+- **Team Size**: {{ world_model.organizational_structure.team_size }}
+- **Reports To**: {{ world_model.organizational_structure.reporting_to }}
+
+### Personal Work Context
+- **Work Style**: {{ world_model.personal_context.work_style }}
+- **Communication Preferences**: {{ world_model.personal_context.communication_preferences | join(", ") }}
+- **Current Priorities**: {{ world_model.personal_context.current_priorities | join(", ") }}
+- **Pain Points**: {{ world_model.personal_context.pain_points | join(", ") }}
+
+### Key Relationships
+{% for rel in world_model.relationships[:5] %}
+- **{{ rel.name }}** ({{ rel.type.value }}): {{ rel.relationship_context }}
+{% endfor %}
+
+### Bottleneck to Resolve
+- **Type**: {{ bottleneck.type }}
+- **Description**: {{ bottleneck.description }}
+## Available Actions to Resolve Bottleneck
+{% for action in available_actions %}
+- **{{ action.id }}** ({{ action.type }}): {{ action.description }}{% if action.params_schema.required %} [required params: {{ action.params_schema.required | join(", ") }}]{% endif %}
+{% endfor %}
+
+## Task
+
+Generate a JSON object with three evaluation steps.
+
+### Step 1: Search Step
+Define the MINIMAL set of data sources needed to identify the bottleneck:
+- **CRITICAL**: Only include data sources that are ABSOLUTELY NECESSARY to identify the problem
+- **MANDATORY NUMBER OF SOURCES FOR {{ difficulty|upper }} DIFFICULTY**:
+{%- if difficulty == "easy" %}
+  - **EXACTLY 1-2 sources** (no more, no less)
+{%- elif difficulty == "medium" %}
+  - **EXACTLY 2-3 sources** (no more, no less)
+{%- else %}
+  - **EXACTLY 3-5 sources** (no more, no less)
+{%- endif %}
+- For harder difficulties, split evidence across multiple sources so no single source reveals everything
+- Each source should provide partial information that must be combined
+- Focus on the most direct evidence types (emails, documents, calendar events)
+- Avoid redundant or nice-to-have information
+
+### Step 2: Identification Step
+Define how to verify the correct problem was recognized:
+- The exact problem that should be identified is already provided in the bottleneck description
+- This step simply checks that the agent recognized this specific issue
+
+### Step 3: Task Selection Step
+Define the correct action and parameters to resolve the bottleneck:
+- Choose the specific action ID (not just the type) from the available list
+- Specify the exact parameter values needed
+- Consider the context and relationships when setting parameters
+## Example (for reference)
+For a double-booked meeting bottleneck:
+```json
+{
+  "search_step": {
+    "description": "Check that calendar events and meeting invites were retrieved",
+    "expected_sources": ["calendar_events", "meeting_invitations"]
+  },
+  "identification_step": {
+    "description": "Verify that the double_booked_meetings problem was correctly identified"
+  },
+  "task_selection_step": {
+    "description": "Select reschedule_meeting action to move one of the conflicting meetings",
+    "correct_action": "reschedule_meeting",
+    "correct_parameters": {
+      "meeting_id": "meet-q3-budget-2024",
+      "attendees": ["Sarah Chen", "infrastructure team"],
+      "new_time": "Tuesday 3pm",
+      "reason": "Conflict with sprint planning"
+    }
+  }
+}
+```
+
+## Requirements
+1. **Search**: List EXACTLY {% if difficulty == "easy" %}1-2{% elif difficulty == "medium" %}2-3{% else %}3-5{% endif %} data sources
+   - Each source should provide partial evidence
+   - No single source should reveal the entire bottleneck
+   - Use highly specific and realistic source names (e.g., "email_threads_regarding_financial_analytics_from_Q1", "Q2_financial_report_documents", "calendar_events_for_team_meetings", "slack_messages_with_manager_wednesday_01_23", "jira_tickets_related_to_latest_neuralnet_deployment")
+2. **Identification**: Confirm the specific bottleneck was recognized
+3. **Task Selection**: Choose the specific action ID (from the available actions list) & parameters that DIRECTLY RESOLVE the bottleneck
+
+Generate JSON for THIS bottleneck:

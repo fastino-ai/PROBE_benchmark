@@ -1,0 +1,71 @@
+# PersonaSim Data Generation Configuration Examples
+# Copy one of these configurations to config.yaml and customize as needed
+
+# ================================
+# DEFAULT BATCH CONFIGURATION
+# ================================
+mode: batch
+count: 30
+difficulty: medium            # Options: easy, medium, hard, production
+start_persona_index: 0
+output_directory: generated_data
+generate_distractors: true
+distractor_count: 20
+prepare_annotations: true
+coordinated_generation: true
+use_multi_llm: true
+llm_model: gpt-4.1-mini
+parallel: true
+max_workers: 8
+# example_emails_path: path/to/example_emails.json  # Optional: JSON file with example emails for grounding
+
+# ================================
+# PRESET CONFIGURATIONS
+# ================================
+
+# Uncomment one of these sections to use preset configurations:
+
+# QUICK TEST (generates 1 simple example)
+#mode: test
+#difficulty: easy
+#generate_distractors: true
+#distractor_count: 5
+#parallel: false
+#output_directory: test_output
+
+# DEVELOPMENT (small batch for testing changes)
+#mode: batch
+#count: 5
+#difficulty: easy
+#generate_distractors: true
+#distractor_count: 10
+#parallel: false
+#use_multi_llm: false
+#output_directory: dev_output
+
+# EVALUATION DATASET (large, high-quality dataset)
+#mode: batch
+#count: 200
+#difficulty: hard
+#generate_distractors: true
+#distractor_count: 50
+#prepare_annotations: true
+#coordinated_generation: true
+#use_multi_llm: true
+#parallel: true
+#max_workers: 12
+#output_directory: evaluation_data
+
+# PRODUCTION DATASET (highest quality, maximum distractors)
+#mode: batch
+#count: 500
+#difficulty: production
+#start_persona_index: 100
+#generate_distractors: true
+#distractor_count: 75
+#prepare_annotations: true
+#coordinated_generation: true
+#use_multi_llm: true
+#parallel: true
+#max_workers: 16
+#output_directory: production_data

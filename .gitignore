@@ -1,0 +1,54 @@
+# Python cache directories
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+*.egg-info/
+*.egg
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+
+# Generated data and logs
+generated_data/
+generation.log
+*.log
+
+# Evaluation results
+results/
+batch_results/
+baseline_evaluation_results_*.json
+*_results.json
+*_summary.csv
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-*
+.DS_Store
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# pytest cache
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover

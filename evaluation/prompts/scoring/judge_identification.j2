@@ -1,0 +1,103 @@
+You are evaluating whether an AI agent correctly identified a bottleneck using precision-based scoring.
+
+## Context
+The agent was given various documents and data sources to analyze, and needed to identify the bottleneck affecting productivity.
+
+## Workplace Context
+Persona: {{ world_model.persona_full_name }}
+Company: {{ world_model.organizational_structure.company_name }}
+Department: {{ world_model.organizational_structure.department }}
+Team Size: {{ world_model.organizational_structure.team_size }}
+
+## What the Agent Identified
+"{{ identified_bottleneck }}"
+
+## The Actual Bottleneck
+"{{ actual_bottleneck }}"
+
+## Two-Tier Precision Scoring System
+
+### ESSENTIAL DETAILS (Must be 100% correct for any points)
+These are execution-critical details required for immediate action:
+
+1. **WHO_BLOCKED**: The exact person/entity being blocked (specific names, not roles)
+2. **WHO_BLOCKER**: The exact person/entity causing the blockage (specific names, not roles)
+3. **WHAT_TASK**: The specific deliverable/work item that's blocked (exact names, not generic descriptions)
+4. **WHY_ROOT_CAUSE**: The true underlying reason for the blockage (not symptoms)
+
+### NON-ESSENTIAL DETAILS (Can have minor errors/omissions)
+These provide context but aren't critical for immediate resolution:
+
+5. **WHEN_DEADLINE**: Specific dates and timelines
+6. **WHERE_SYSTEM**: Exact system/tool names and locations
+7. **HOW_MECHANISM**: Detailed process or workflow information
+8. **IMPACT_SCOPE**: Downstream effects and dependencies
+
+## Scoring Rules
+
+**CORRECT (1.0)**: All essential details are accurate AND all non-essential details are accurate
+**PARTIALLY_CORRECT (0.5)**: All essential details are accurate BUT has errors/omissions in non-essential details
+**INCORRECT (0.0)**: Any essential detail is wrong, missing, or too vague
+
+## Essential Detail Requirements
+- **Names must be specific**: "Timothy" not "someone from finance"
+- **Systems must be exact**: "econo.com" not "financial system"
+- **Tasks must be precise**: "Q3 financials initiative" not "quarterly report"
+- **Root causes must be accurate**: "Martha stripped access" not "system issues"
+
+## Examples
+
+### Example 1: CORRECT (1.0)
+**Actual**: Timothy isn't meeting the March 23rd deadline for his Q3 financials initiative because Martha revoked his econo.com access to company financials.
+
+**Agent**: Timothy cannot complete his Q3 financials initiative by the March 23rd deadline because Martha removed his access to company financials through econo.com.
+
+**Analysis**:
+- ✅ WHO_BLOCKED: Timothy (correct)
+- ✅ WHO_BLOCKER: Martha (correct)
+- ✅ WHAT_TASK: Q3 financials initiative (correct)
+- ✅ WHY_ROOT_CAUSE: Martha revoked access (correct)
+- ✅ All non-essential details accurate
+
+### Example 2: PARTIALLY_CORRECT (0.5)
+**Actual**: Timothy isn't meeting the March 23rd deadline for his Q3 financials initiative because Martha revoked his econo.com access to company financials.
+
+**Agent**: Timothy cannot complete his Q3 financials initiative because Martha removed his access to company financial systems.
+
+**Analysis**:
+- ✅ WHO_BLOCKED: Timothy (correct)
+- ✅ WHO_BLOCKER: Martha (correct)
+- ✅ WHAT_TASK: Q3 financials initiative (correct)
+- ✅ WHY_ROOT_CAUSE: Martha revoked access (correct)
+- ❌ WHEN_DEADLINE: Missing March 23rd
+- ❌ WHERE_SYSTEM: "financial systems" instead of "econo.com"
+
+### Example 3: INCORRECT (0.0)
+**Actual**: Timothy isn't meeting the March 23rd deadline for his Q3 financials initiative because Martha revoked his econo.com access to company financials.
+
+**Agent**: Someone from finance is having trouble with their quarterly report due to system access issues.
+
+**Analysis**:
+- ❌ WHO_BLOCKED: "someone from finance" instead of Timothy
+- ❌ WHO_BLOCKER: Missing Martha entirely
+- ❌ WHAT_TASK: "quarterly report" instead of Q3 financials initiative
+- ❌ WHY_ROOT_CAUSE: "system issues" instead of Martha's action
+
+## Output Format
+Return a JSON object with:
+{
+  "judgment": "<CORRECT|PARTIALLY_CORRECT|INCORRECT>",
+  "essential_details_analysis": {
+    "who_blocked": "<correct|incorrect|missing>",
+    "who_blocker": "<correct|incorrect|missing>",
+    "what_task": "<correct|incorrect|missing>",
+    "why_root_cause": "<correct|incorrect|missing>"
+  },
+  "non_essential_details_analysis": {
+    "when_deadline": "<correct|incorrect|missing|n/a>",
+    "where_system": "<correct|incorrect|missing|n/a>",
+    "how_mechanism": "<correct|incorrect|missing|n/a>",
+    "impact_scope": "<correct|incorrect|missing|n/a>"
+  },
+  "reasoning": "<explanation of your scoring decision focusing on essential vs non-essential accuracy>"
+}

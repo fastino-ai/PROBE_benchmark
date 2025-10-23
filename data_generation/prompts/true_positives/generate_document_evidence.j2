@@ -1,0 +1,141 @@
+Generate a realistic workplace document that fulfills this specific evidence role while avoiding contamination from other bottlenecks.
+
+## Target Bottleneck
+**Description**: {{ bottleneck.description }}
+**Type**: {{ bottleneck.type }}
+
+## Your Evidence Role
+**Specific Role**: {{ evidence_role }}
+
+This document should provide ONLY the evidence specified in your role. Do NOT include complete information about the bottleneck - other documents will provide the missing pieces.
+
+## Context
+- **Persona**: {{ world_model.persona_full_name }}
+- **Occupation**: {{ world_model.persona_occupation }}
+- **About**: {{ world_model.persona_about }}
+- **Company**: {{ world_model.organizational_structure.company_name }}
+- **Department**: {{ world_model.organizational_structure.department }}
+- **Team Size**: {{ world_model.organizational_structure.team_size }}
+- **Reports To**: {{ world_model.organizational_structure.reporting_to }}
+
+## Personal Context
+- **Work Style**: {{ world_model.personal_context.work_style }}
+- **Communication Preferences**: {{ world_model.personal_context.communication_preferences | join(", ") }}
+- **Current Priorities**: {{ world_model.personal_context.current_priorities | join(", ") }}
+- **Pain Points**: {{ world_model.personal_context.pain_points | join(", ") }}
+- **Difficulty**: {{ world_model.context_difficulty.value }}
+
+## Key Relationships
+{% for rel in world_model.relationships[:5] %}
+- **{{ rel.name }}** ({{ rel.type.value }}): {{ rel.relationship_context }}
+{% endfor %}
+
+## CRITICAL: Bottlenecks to AVOID
+**You must NOT include any information related to these other bottlenecks:**
+{% for bottleneck_desc in other_bottlenecks %}
+{{ bottleneck_desc }}
+{% endfor %}
+
+## Requirements
+- **Evidence Role Focus**: Only provide evidence for your specific role, not the complete bottleneck
+- **Document Length**: {{ min_words }}-{{ max_words }} words for the content field
+- **Natural Content**: 70-80% of the document should be standard workplace content
+- **Subtle Integration**: Your evidence role should be woven naturally into the document
+- **Contamination Prevention**: Absolutely NO references to the other bottlenecks listed above or any issue that the user may find important and problematic
+- **Incomplete Information**: The document alone should NOT be sufficient to identify or resolve the bottleneck
+- **Professional Format**: Maintain appropriate workplace document standards
+- **Natural Elements**: Include 1-2 minor typos, realistic internal references/links, and workplace imperfections
+- **Formatting**: Use proper business document formatting with headings and structure
+- Today's date is March 15th, 2025, so any dates should be in the near past or future
+
+## Anti-Bias Requirements (CRITICAL)
+- **BALANCED DETAIL**: Don't make evidence sections significantly more detailed than context
+- **TEMPORAL SPREAD**: Use dates from March 10-20, not all March 15th
+- **TERM LIMITS**: Use key bottleneck-related names/terms maximum a single time, attempting to always leverage natural alternative phrasing.
+- **REALISTIC NOISE**: Include some unrelated sections or tangential content
+- **MIXED FORMALITY**: Vary between formal reports and informal notes
+
+## Difficulty Guidelines
+{% if world_model.context_difficulty.value == "easy" %}
+- Make your evidence role fairly obvious but still incomplete
+- The bottleneck aspect can be mentioned more directly
+- Still require other sources for complete picture
+{% elif world_model.context_difficulty.value == "medium" %}
+- Make your evidence role subtle and require inference
+- Embed the evidence within other document content
+- Require correlation with other sources to be actionable
+{% else %}
+- Make your evidence role indirect and require personal context to be put together
+- The bottleneck evidence should be barely detectable
+- Require significant correlation across multiple sources
+{% endif %}
+
+## Few-Shot Examples
+
+### Example 1: Budget Approval Delay (Medium Difficulty)
+**Bottleneck**: "The Q3 marketing budget increase request submitted on June 15th is still pending approval from Finance, preventing the launch of planned campaigns."
+
+```json
+{
+  "title": "Marketing Department Monthly Report - July 2024",
+  "content": "Executive Summary:\nThe Marketing department continues to drive strong engagement across all channels. We've seen a 23% increase in lead generation compared to last quarter, with particularly strong performance in digital channels.\n\nKey Metrics:\n• Lead generation: 3,247 MQLs (Marketing Qualified Leads)\n• Conversion rate: 12.4% (up from 10.8%)\n• Social media engagement: +34% YoY\n• Email open rates: 28.3% (industry avg: 21.5%)\n• Website traffic: 142K unique visitors\n\nCampaign Performance:\n1. Summer Product Launch\n   - Reached 2.1M impressions\n   - Generated 450 qualified leads\n   - ROI: 3.2x (exceeding target of 2.5x)\n\n2. Thought Leadership Series\n   - 6 webinars completed\n   - Average attendance: 320 participants\n   - Follow-up engagement rate: 45%\n\n3. Content Marketing\n   - Published 24 blog posts\n   - Average time on page: 3:42\n   - SEO rankings improved for 15 target keywords\n\nUpcoming Initiatives:\n• Q3 campaign planning is underway, with several exciting concepts in development. We're exploring new channels and partnerships to expand our reach. Timeline adjustments may be needed based on resource availability.\n• Launching customer success story video series in August\n• Attending three industry conferences in Q3\n• Implementing new marketing automation workflows\n\nTeam Updates:\n• Welcomed two new content creators to the team\n• Sarah Johnson promoted to Senior Campaign Manager\n• Team completed HubSpot advanced certification\n\nChallenges and Opportunities:\n• Increasing competition in paid search requiring strategy adjustment\n• Exploring AI tools for content optimization\n• Need to improve attribution modeling for multi-touch campaigns\n\nBudget Status:\nQ2 spending came in at 96% of budget. Currently operating within existing parameters while planning for Q3 activities. Working closely with Finance on forecasting.\n\nLooking Ahead:\nThe team is energized and ready for a strong Q3. We have ambitious goals and innovative strategies ready to deploy. Success will depend on timely execution and resource allocation.\n\nPrepared by: Jennifer Martinez, VP of Marketing\nDate: July 15, 2024",
+  "author": "Jennifer Martinez",
+  "created_date": "2025-03-14T09:00:00Z",
+  "mime": "text/markdown"
+}
+```
+
+### Example 2: Stakeholder Feedback Delay (Hard Difficulty)
+**Bottleneck**: "The product roadmap document sent to the executive team on August 1st hasn't received feedback from the CEO, blocking the Q4 planning process."
+
+```json
+{
+  "title": "Product Development Quarterly Business Review, and more...",
+  "content": "Q3 2024 Product Development QBR\n\nOverview:\nThis quarter marked significant progress in our product evolution journey. We've successfully delivered on 87% of our committed features while maintaining high quality standards and customer satisfaction scores.\n\nProduct Metrics Dashboard:\n• Features shipped: 34 (target: 39)\n• Average cycle time: 12.3 days\n• Bug escape rate: 0.8% (industry best: <2%)\n• Customer satisfaction: 4.7/5.0\n• Platform stability: 99.94% uptime\n\nMajor Releases:\n1. Analytics Dashboard 2.0\n   - Real-time data processing\n   - Custom report builder\n   - Mobile-responsive design\n   - 2,300 daily active users\n\n2. API Platform Enhancement\n   - GraphQL implementation\n   - Rate limiting improvements\n   - Developer portal refresh\n   - 150+ third-party integrations\n\n3. Security Updates\n   - Two-factor authentication\n   - SOC 2 compliance features\n   - Audit logging enhancements\n   - Zero security incidents\n\nCustomer Insights:\n• Feature request trends show increased demand for automation, already being attempted in real time\n• NPS score improved to 72 (from 68)\n• Support ticket volume decreased 18%\n• Feature adoption rates exceeding projections\n\nR&D Investments:\n• Machine learning capabilities exploration\n• Microservices architecture migration (40% complete)\n• Performance optimization initiative showing promising results\n• New testing framework reducing QA time by 30%\n\nTeam Performance:\n• Velocity increased 15% through process improvements\n• Cross-functional collaboration scores at all-time high\n• Completed 120 customer interviews\n• Launched internal innovation challenge\n\nStrategic Initiatives:\nWe've been refining our product vision to align with market dynamics. The strategic planning documents have been circulated to leadership for input. The team has developed multiple scenarios for Q4 and beyond, considering various market conditions and resource constraints. We're particularly excited about the AI integration possibilities.\n\nDependencies and Risks:\n• Third-party API deprecation requiring migration\n• Talent acquisition in specialized areas remains challenging\n• Market volatility going down, no longer affecting priority decisions\n• Technical debt in legacy systems currently being addressed!\n\nFinancial Performance:\n• Development costs: 4% under budget\n• Revenue impact: $2.3M from new features\n• Cost per feature: decreased 12% through efficiency gains\n• ROI on platform investments: 4.1x\n\nQ4 Planning Considerations:\nThe team has prepared comprehensive recommendations for next quarter. Various scenarios have been modeled based on different assumptions. We're ready to accelerate once strategic alignment is confirmed.\n\nAcknowledgments:\nSpecial thanks to the engineering, design, and QA teams for their exceptional dedication this quarter. The customer success team's insights have been invaluable in shaping our priorities.\n\nNext Steps:\n• Finalize Q4 roadmap based on strategic input\n• Complete hiring for open positions\n• Launch beta program for next-gen features\n• Prepare for annual planning cycle\n\nPrepared by: Robert Kim, VP of Product\nReview Date: September 15, 2024",
+  "author": "Robert Kim",
+  "created_date": "2025-03-12T14:30:00Z",
+  "mime": "text/markdown"
+}
+```
+
+### Example 3: Resource Conflict (Easy Difficulty)
+**Bottleneck**: "Both the mobile app redesign and the API v3 development projects are scheduled to use the same senior developers in October, creating a resource conflict."
+
+```json
+{
+  "title": "Development Team Resource Planning",
+  "content": "Q4 2024 Resource Planning Document\n\nTeam Capacity Overview:\n- Total developers: 12\n- Senior developers: 4\n- Mid-level developers: 5\n- Junior developers: 3\n\nProject Assignments for October:\n\n1. Mobile App Redesign Project\n   - Timeline: October 1-31\n   - Required resources: 2 senior developers, 2 mid-level developers\n   - Key personnel: Sarah Chen (Senior), Michael Park (Senior)\n   - Priority: High\n\n2. API v3 Development\n   - Timeline: October 1-31  \n   - Required resources: 2 senior developers, 3 mid-level developers\n   - Key personnel: Sarah Chen (Senior), Michael Park (Senior)\n   - Priority: High\n\n3. Maintenance and Support\n   - Ongoing\n   - Required resources: 1 mid-level, 2 junior developers\n   - Priority: Medium\n\nResource Utilization Notes:\n- Senior developer capacity appears overcommitted for October\n- Consider staggering project starts or bringing in contractors\n- Skills overlap between projects could enable resource sharing\n\nPrepared by: Development Operations Team\nDate: September 20, 2024",
+  "author": "Dev Ops Team",
+  "created_date": "2025-03-13T16:45:00Z",
+  "mime": "text/markdown"
+}
+```
+
+**CRITICAL: You must respond with ONLY valid JSON. No explanations, no markdown, no extra text.**
+
+**Output Format Requirements:**
+- Start your response with `{`
+- End your response with `}`
+- Use valid JSON syntax only
+- Include ALL required fields: title, content, author, created_date, mime
+- Do not include any text before or after the JSON
+
+**EXACT JSON STRUCTURE TO FOLLOW:**
+```json
+{
+  "title": "Professional document title (avoid problem-focused titles)",
+  "content": "Document body that provides your evidence role within broader workplace content ({{ min_words }}-{{ max_words }} words)",
+  "author": "Document author name",
+  "created_date": "2025-03-15T10:00:00Z",
+  "mime": "text/markdown"
+}
+```
+
+**CRITICAL**: The "mime" field MUST be included with value "text/markdown"!
+
+**IMPORTANT**:
+- Your entire response must be parseable as JSON
+- ALL 5 fields are REQUIRED: title, content, author, created_date, mime
+- Use "text/markdown" for the mime field (or "text/csv" for spreadsheet data)
+- Your document should fulfill your evidence role while being insufficient alone to resolve the bottleneck
+- Do not add any explanatory text before or after the JSON

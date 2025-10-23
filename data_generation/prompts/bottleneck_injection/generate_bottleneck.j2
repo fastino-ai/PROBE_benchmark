@@ -1,0 +1,88 @@
+You are an expert at creating highly specific, context-driven productivity bottlenecks that could be found in real workplace documents (emails, calendar events, Google Docs, etc.).
+
+## CRITICAL RULE: ONE PROBLEM PER BOTTLENECK
+Each bottleneck must describe EXACTLY ONE problem or issue. Do NOT combine multiple problems into a single bottleneck.
+
+
+## Task
+Generate a SINGLE, SPECIFIC bottleneck for {{ persona_name }} that:
+1. Describes ONLY ONE problem or blocking issue
+2. References specific people, projects, deadlines, or documents by name
+3. Could realistically be discovered in workplace documents
+4. Is addressable by some action that a working professional could take
+5. Is different from any previously generated bottlenecks
+6. **MUST BE RELEVANT** to the persona's role, occupation, or pain points: something the user would care about
+
+## Context
+
+**Persona**: {{ persona_name }}
+**Occupation**: {{ persona_occupation }}
+**About**: {{ persona_about }}
+
+**Role**: {{ persona_name }}, working at {{ org_structure.company_name }} in {{ org_structure.department }}
+**Team**: {{ org_structure.team_size }} people, reporting to {{ org_structure.reporting_to }}
+
+**Key Relationships**:
+{% for rel in relationships[:7] %}
+- {{ rel.name }} ({{ rel.type.value }}): {{ rel.relationship_context }}
+{% endfor %}
+
+**Current Priorities**: {{ personal_context.current_priorities | join(', ') }}
+**Pain Points**: {{ personal_context.pain_points | join(', ') }}
+
+**Difficulty**: {{ difficulty }}
+
+## CRITICAL: Persona-Specific Bottlenecks
+The bottleneck MUST be relevant to someone with the occupation "{{ persona_occupation }}" and background described in "{{ persona_about }}". Consider:
+- What types of complex, multifaceted problems would someone in this role typically face?
+- What projects, tools, or processes would they be involved in?
+- What stakeholders would they interact with?
+- What deliverables or responsibilities would they have?
+
+## Examples of SINGLE-PROBLEM Bottlenecks
+
+### ✅ GOOD Example 1: Resource access block
+"You've been waiting 6 days for IT to grant you access to the production analytics database (ticket #IT-2024-3847), which is preventing you from running the customer churn analysis that the CEO requested by Friday."
+
+### ✅ GOOD Example 2: Missing team member input
+"The product roadmap presentation for tomorrow's board meeting is missing the revenue projections section that Finance Director Amanda Liu was supposed to provide by EOD yesterday, and she's been out sick since Tuesday."
+
+### ✅ GOOD Example 3: Conflicting stakeholder feedback
+"Your latest design mockups for the mobile app redesign received contradictory feedback: VP of Sales Marcus Thompson wants prominent 'Buy Now' buttons throughout, while Head of UX Design Priya Patel insists on maintaining the minimalist approach approved in the Q3 design principles document. The head of research - Jackson Lombardi - contradicts both Priya and Marcus and wants to add a 'Explore' button instead."
+
+### ✅ GOOD Example 4: External vendor delay (HARD - multiple dependencies, complex situation)
+"The 5 weeks before this week, the AWS enterprise team has been delayed in responding to you by at least one day. This week, they have been delayed by at least two days. This AWS enterprise support team hasn't responded to your critical P1 ticket (#AWS-SUP-445892) about the recurring Lambda timeout errors that are causing 15% of payment transactions to fail since last Thursday."
+
+### ✅ GOOD Example 5: Increasing Lovable Bill (MEDIUM - multiple dependencies, measurable impact)
+"For the last 6 weeks, the Lovable bill has increased by 3-4% each week, and API calls have gone up drastically, likely as a result of increasing bot use in the product. However, this has come with no improvement in developer productivity (measured by lines code)"
+
+### ✅ GOOD Example 6: Compliance requirement halt (MEDIUM - specific people, conflicting documents, measurable impact)
+"Legal just flagged that the new customer data retention feature you're about to deploy violates GDPR Article 17 requirements, requiring a complete redesign of the deletion logic before the January 31st compliance deadline."
+
+### ❌ BAD Example: Multiple problems combined
+"The Q3 planning is blocked because Sarah hasn't responded to your email AND Michael double-booked a meeting AND the budget document needs approval AND the team is waiting for your input."
+
+### ❌ BAD Example: Multiple problems combined
+"The Q3 planning is blocked because Sarah hasn't responded to your email AND Michael double-booked a meeting AND the budget document needs approval AND the team is waiting for your input."
+
+## Instructions
+Generate ONE bottleneck that:
+1. Uses REAL NAMES from the relationships list
+2. Mentions SPECIFIC documents, tickets, or meetings that could exist
+3. Includes CONCRETE details (dates, times, project names, ticket numbers)
+4. References information that would be found in emails, calendars, or documents
+5. Is {{ difficulty }} difficulty:
+   - EASY: Simple, straightforward bottleneck with clear cause and resolution path. Single document/source, minimal complexity.
+   - MEDIUM: Complex and multifaceted bottleneck requiring coordination across multiple sources, people, or systems. Involves multiple dependencies or conflicting requirements.
+   - HARD: Subtle, somewhat unusual, complex, and multifaceted bottleneck. Not immediately obvious, requires deep investigation, involves intricate relationships between multiple factors, and may have non-standard or creative solutions.
+
+**Remember**: The bottleneck must make sense for someone who is "{{ persona_occupation }}" with the background: "{{ persona_about }}", and must be relevant to the persona's role, occupation, or pain points.
+
+## Output Format
+Return a JSON object with this structure:
+{
+  "description": "The bottleneck description (1-3 sentences)",
+  "searchable_artifacts": ["artifact1", "artifact2"]
+}
+
+The searchable_artifacts should list specific documents, tickets, meeting IDs, or other concrete items mentioned in the description.

@@ -1,0 +1,152 @@
+Generate realistic document items for this workplace context that DO NOT contain any information helpful for resolving the bottleneck. Note that these should be in the desired word count.
+
+## Context
+- **Persona**: {{ world_model.persona_full_name }}
+- **Occupation**: {{ world_model.persona_occupation }}
+- **About**: {{ world_model.persona_about }}
+- **Company**: {{ world_model.organizational_structure.company_name }}
+- **Department**: {{ world_model.organizational_structure.department }}
+- **Team Size**: {{ world_model.organizational_structure.team_size }}
+- **Reports To**: {{ world_model.organizational_structure.reporting_to }}
+
+## Personal Context
+- **Work Style**: {{ world_model.personal_context.work_style }}
+- **Communication Preferences**: {{ world_model.personal_context.communication_preferences | join(", ") }}
+- **Current Priorities**: {{ world_model.personal_context.current_priorities | join(", ") }}
+- **Pain Points**: {{ world_model.personal_context.pain_points | join(", ") }}
+
+## Key Relationships
+{% for rel in world_model.relationships[:5] %}
+- **{{ rel.name }}** ({{ rel.type.value }}): {{ rel.relationship_context }}
+{% endfor %}
+
+## Bottleneck(s) to AVOID
+**Important**: Generate items that are completely unrelated to this bottleneck, or any problem the user would find important based on their context/personal context:
+- {{ bottleneck.description }}
+
+## Available Actions Context
+The user has access to these types of actions:
+{% for action in actions[:10] %}
+- **{{ action.type }}**: {{ action.description }}
+{% endfor %}
+
+**CRITICAL**: Distractors should relate to similar workplace activities but NOT directly address any of these actions. Create content that might seem relevant to these action types but doesn't actually require or suggest using them.
+
+## Strategic Distractor Types
+Employ these specific distractor strategies to create confusing but non-actionable groups of documents. Recall that documents can work together to create a narrative (e.g. propose a bottleneck in one document and invalidate it in another document):
+
+- **Proposal-Dismissal**: Document proposing a potential bottleneck, but with annotations/updates from another document claiming it's no longer relevant
+- **Outdated Bottleneck**: Document about a bottleneck from months/years ago that's no longer actionable
+- **Awaiting Approval**: Document detailing a potential bottleneck that another document claims is deprioritized and awaiting long-term executive approval
+- **Unaddressable Distractor**: Document about a clear bottleneck that's completely outside the persona's control/authority
+- **Resolved-But-Mentioned**: Document discussing a bottleneck-like situation that was already resolved by another document that you previously generated..
+- **False-Positive-Similarity**: Use similar keywords/entities to the bottleneck but in completely different contexts
+- **Delegation-Complete**: Document proposing an issue and another document showing someone else is handling a similar issue, not the user's concern
+- **Contingency-Planning**: Document discussing backup plans for hypothetical issues that may never occur
+- **Historical-Reference**: Document mentioning similar past problems but emphasizing they're ancient history
+- **Scope-Mismatch**: Document about problems in different teams/departments outside the user's authority
+- **Urgent-But-Not-Actionable**: Document shows an extremely urgent issue that user has no authority to address
+- **Evolution-to-resolution**: A few of your documents show the evolution of a bottleneck until one document claims it has resolved the issue.
+
+## Requirements
+- Generate {{ count }} document items
+- Items should be natural, highly specific workplace documents
+- They should fit the organizational context or reference some personal context
+- They must NOT contain any information that would help identify or resolve the bottleneck
+- **Items should not be both important and actionable to {{ world_model.persona_full_name }} (based on the actions provided)!!**
+- Any date chosen should be a random date in 2025
+- Document body length: {{ min_words }}-{{ max_words }} words
+- **ACTION-AWARE DOCUMENTS**: Create documents that relate to or mention the available actions but do NOT require or suggest using those specific actions
+- **INDIRECT RELEVANCE**: Make documents seem very relevant to the priorities, pain points, and action items, but not directly address the bottleneck or present a problem the user would find important based on their context/personal context.
+
+## Few-Shot Examples
+
+{% if difficulty == "easy" %}
+### Easy Difficulty Examples
+
+#### Example 1: Meeting Minutes (When bottleneck is about budget approval delay, user is Dennis)
+**Bottleneck to avoid**: "The Q3 marketing budget increase request submitted on June 15th is still pending approval from Finance, preventing the launch of planned campaigns."
+
+```json
+{
+  "title": "Team Standup Notes - July 20",
+  "mime": "text/markdown",
+  "content": "# Daily Standup Notes\n\n**Date**: July 20, 2025\n**Attendees**: Development Team\n\n## Updates\n\n**Sarah**:\n- Completed user authentication module\n- Starting on password reset feature\n- No blockers\n\n**Mike**:\n- Fixed the CSS layout bug on homepage\n- Reviewing pull requests today\n- Need access to staging server\n\n**Jennifer**:\n- Database migration script ready for testing\n- Will deploy to test environment this afternoon\n- Waiting for QA feedback on previous feature\n\n**Tom**:\n- Wrapped up API documentation updates\n- Starting performance optimization task\n- Paired with Lisa on search feature\n\n## Action Items\n- Mike: Request staging access from DevOps team\n- Team: Update JIRA tickets before EOD\n- All: Complete code reviews by Thursday\n- Sarah: Schedule knowledge sharing on auth module\n\n## Blockers\n- Staging server access (Mike)\n- QA feedback delay (Jennifer)\n\n**Next Meeting**: Tomorrow 10 AM\n\n*Note: Remember to update your timesheets (I know you already have Dennis)!*",
+  "why_not_satisfy": "This document contains routine standup meeting notes about development tasks, with no mention of marketing budgets or financial approvals"
+}
+```
+
+#### Example 2: Office Policy Update (When bottleneck is about conflicting meetings)
+**Bottleneck to avoid**: "You have two important meetings scheduled at the same time on Tuesday at 2pm: the product roadmap review with the CEO and the client presentation with ABC Corp."
+
+```json
+{
+  "title": "Updated Policy - Please Read",
+  "mime": "text/markdown",
+  "content": "# Kitchen and Break Room Policy Update\n\n**Effective Date**: March 20, 2025\n\nDear Team,\n\nWe're updating our kitchen policies to ensure a clean and pleasant environment for everyone.\n\n## New Guidelines\n\n1. **Clean up after yourself**\n   - Wash your dishes immediately after use\n   - Wipe down counters and tables\n   - Don't leave food in the sink\n\n2. **Refrigerator Policy**\n   - Label all items with your name and date\n   - Fridge will be cleaned out every Friday at 5 PM\n   - Unclaimed items will be discarded\n\n3. **Coffee Station**\n   - Make a new pot if you take the last cup\n   - Turn off coffee machines after 6 PM\n   - Report supply shortages to facilities@company.com\n\n4. **Microwave Use**\n   - Cover all food when heating\n   - Clean spills immediately\n   - Be mindful of strong-smelling foods\n\n5. **Dishwasher**\n   - Run when full\n   - Unload promptly when cycle completes\n   - Hand wash delicate items\n\nViolations will result in a friendly reminder. Repeat violations may lead to kitchen privileges being reviewed.\n\nThank you for keeping our shared spaces clean and welcoming!\n\n- Facilities Team",
+  "why_not_satisfy": "This document is about kitchen policies and has nothing to do with meeting schedules or conflicts"
+}
+```
+
+{% elif difficulty == "medium" %}
+### Medium Difficulty Examples
+
+#### Example 1: Urgent Process Update (When bottleneck is about budget approval delay and user is finance manager)
+**Bottleneck to avoid**: "The Q3 marketing budget increase request submitted on June 15th is still pending approval from Finance, preventing the launch of planned campaigns."
+
+```json
+{
+  "title": "New Code Review Process - Effective Immediately",
+  "mime": "text/markdown",
+  "content": "# Critical Update: Code Review Process Changes\n\n**Date**: July 18, 2025\n**From**: Engineering Leadership\n**Priority**: HIGH\n\n## Executive Summary\n\nFollowing recent productionn incidents and audit findings, we are implementing mndatory changes to our code review process. These changes are effective immediately and non-compliance will block deployments.\n\n## What's Changing\n\n### 1. Mandatory Two-Reviewer Approval\n- ALL pull requests now require two approvals (previously one)\n- At least one reviewer must be a senior engineer or above\n- Automated checks must pass before human review begins\n\n### 2. Security Review Requirements\n- Any code touching authentication, authorization, or data access requires Security team review\n- Use the `security-review-needed` label\n- Security SLA: 4 hours for critical, 24 hours for standard\n\n### 3. Performance Impact Assessment\n- PRs must include performance impact statement\n- Database queries require EXPLAIN plan analysis\n- Load testing required for customer-facing changes\n\n### 4. Documentation Standards\n- Update technical docs with every PR\n- Include architecture decision records (ADRs) for significant changes\n- API changes require OpenAPI spec updates\n\n## Compliance Timeline\n\n**Immediate (July 18)**: Two-reviewer requirement active\n**July 25**: Security review process fully enforced\n**August 1**: All legacy PRs must be compliant or closed\n\n## Non-Compliance Consequences\n\n1. PRs will be automatically blocked from merging\n2. Deployment pipeline will reject non-compliant code\n3. Team velocity metrics will be impacted\n4. Escalation to engineering management\n\n## Tools and Resources\n\n- New PR template: Available in all repos\n- Security review checklist: [Link to internal wiki]\n- Performance testing guide: [Link to documentation]\n- Office hours: Daily 2-3 PM with platform team\n\n## FAQ\n\n**Q: What about hotfixes?**\nA: Emergency process requires VP approval and post-mortem\n\n**Q: Do documentation updates need two reviewers?**\nA: Yes, but can be from any team member\n\n**Q: What if security team is unavailable?**\nA: Escalate to on-call security engineer\n\n## Your Action Items\n\n1. Read and acknowledge this policy (link in email)\n2. Update any open PRs to meet new standards\n3. Attend mandatory training (calendar invites sent)\n4. Update your team's workflow documentation\n\nThis is not optional. Full enforcement begins Monday.\n\nQuestions? Contact engineering-leadership@company.com\n\n*Failure to comply will impact your team's deployment capabilities.*",
+  "why_not_satisfy": "This document outlines new engineering code review processes and compliance requirements, with no relation to marketing budgets or financial approvals"
+}
+```
+
+#### Example 2: Strategic Initiative Memo (When bottleneck is about stakeholder feedback delay, user is CTO)
+**Bottleneck to avoid**: "The product roadmap document sent to the executive team on August 1st hasn't received feedback from the CEO, blocking the Q4 planning process."
+
+```json
+{
+  "title": "Digital Transformation Initiative - Action Required",
+  "mime": "text/markdown",
+  "content": "# Digital Transformation Strategic Initiative\n\n**Classification**: confidential - internal only\n**Date**: September 15, 2025\n**From**: Chief Technology Officer\n**To**: All Technology Leaders\n\n## Critical Context\n\nOur competitor TechCorp just announced a $50M investment in AI-driven automation. We should accelerate our digital transformation to maintain market position.\n\n## The Mandate\n\nThe Board has approved an aggressive digital transformation initiative with the following objectives:\n\n1. **Automate 40% of manual processes by Q2 2026**\n2. **Reduce operational costs by $12M annually**\n3. **Improve customer response time by 60%**\n4. **Achieve 99.99% uptime across all systems**\n\n## Immediate Actions Required\n\n### Phase 1: Assessment (Due October 1)\n- Audit all manual processes in your department\n- Identify top 10 automation candidates\n- Calculate ROI for each opportunity\n- Submit findings via the DX Portal\n\n### Phase 2: Planning (October 15)\n- Form cross-functional automation teams\n- Develop 90-day implementation roadmaps\n- Identify skill gaps and training needs\n- Request budget allocations\n\n### Phase 3: Execution (November 1)\n- Launch pilot programs\n- Weekly progress reports to CTO\n- Monthly metrics dashboard updates\n- Quarterly board presentations\n\n## Resource Allocation\n\n- **Budget**: $25M allocated for FY2026\n- **Headcount**: 50 new positions approved\n- **Consultants**: McKinsey engaged for strategy\n- **Technology**: Preferred vendor list attached\n\n## Success Metrics\n\n| Metric | Current | Target | Deadline |\n|--------|---------|--------|----------|\n| Process Automation | 12% | 40% | Q2 2026 |\n| Cost Reduction | $0 | $12M | Q4 2026 |\n| Response Time | 4.2hrs | 1.5hrs | Q3 2026 |\n| System Uptime | 99.5% | 99.99% | Q1 2026 |\n\n## Governance Structure\n\n**Executive Sponsor**: CEO\n**Program Lead**: CTO\n**Steering Committee**: All C-Suite\n**Working Groups**: Department heads\n\n## Communication Protocol\n\n- Weekly status emails every Monday\n- Bi-weekly steering committee meetings\n- Monthly all-hands updates\n- Quarterly board reports\n\n## Risk Mitigation\n\n1. **Change resistance**: Mandatory training for all staff\n2. **Technical debt**: 20% budget for modernization\n3. **Talent shortage**: Partnership with universities\n4. **Vendor lock-in**: Multi-vendor strategy\n\n## Your Deliverables\n\n**By September 25**:\n- Department automation assessment\n- Resource requirements document\n- Risk mitigation plan\n- Quick wins identification\n\n**By October 5**:\n- Team formation complete\n- Pilot project selection\n- Success criteria defined\n- Communication plan drafted\n\nThis initiative has full CEO support. Prioritize accordingly.\n\n**Next Steps**:\n1. Acknowledge receipt of this memo\n2. Schedule 1:1 with your CTO liaison\n3. Begin department assessment immediately\n4. Clear calendar for October 1 planning session\n\n*Failure to meet deadlines will be escalated to the CEO.*\n\n---\n**Distribution**: Technology Leadership Only\n**Do Not Forward Without CTO Approval**",
+  "why_not_satisfy": "This document is about a company-wide digital transformation initiative and automation strategy, unrelated to product roadmap feedback or Q4 planning processes. Also it does not present a bottleneck to the CTO since he has already completed his action item by sending this email"
+}
+```
+
+{% else %}  {# hard difficulty #}
+### Hard Difficulty Examples
+
+#### Example 1: Executive Crisis Communication (When bottleneck is about resource conflicts and user is marketing lead)
+**Bottleneck to avoid**: "Both the mobile app redesign and the API v3 development projects are scheduled to use the same senior developers in October, creating a resource conflict."
+
+```json
+{
+  "title": "🚨 URGENT: Security Incident Response Plan - EXECUTIVE EYES ONLY",
+  "mime": "text/markdown",
+  "content": "# CRITICAL SECURITY INCIDENT - RESPONSE PLAN\n\n**CLASSIFICATION**: STRICTLY CONFIDENTIAL - EXECUTIVE ONLY\n**DATE**: September 22, 2025, 3:47 AM EDT\n**FROM**: Chief Information Security Officer\n**TO**: C-Suite, Board of Directors, Legal Counsel\n**CC**: Incident Response Team. At 2:31 AM EDT, our Security Operations Center (Sharif, thank you for this, your detection protocol was quite appreciated) detected anomalous activity indicating a sophisticated attack attempt on our infrastructure. While the attack was SUCCESSFULLY PREVENTED by performing thorough checks on previous PRs, the implications require immediate executive action.\n\n## THREAT ASSESSMENT\n\n### Attack Vector Analysis\n- **Method**: Advanced Persistent Threat (APT) using zero-day exploit\n- **Target**: Customer payment processing systems\n- **Origin**: Traced to Eastern European threat actor group \"DarkVortex\"\n- **Intent**: Data exfiltration and ransomware deployment\n- **Status**: BLOCKED at perimeter, no breach occurred\n\n### Threat Intellignce\n- Same group ht 3 competitors in last 72 hours\n- TechGiant Corp paid $15M ransom (confidential source)\n- FBI briefing scheduled for 9 AM EDT\n- DHS issuing industry-wide alert today\n\n## IMMEDIATE ACTIONS TAKEN\n\n1. **Technical Response** (Completed 3:15 AM)\n   - All systems isolated and secured\n   - Vulnerability patched across infrastructure\n   - Enhanced monitoring activated\n   - Backup systems verified\n\n2. **Business Continuity** (In Progress)\n   - War room activated (Conference Room A)\n   - Customer systems operating normally\n   - No service disruptions\n   - Redundancy systems on standby\n\n## EXECUTIVE DECISIONS REQUIRED\n\n### 1. Public Disclosure Strategy (Decision by 8 AM)\n- **Option A**: Proactive transparency - Issue press release\n- **Option B**: Regulatory minimum - Notify only if required\n- **Option C**: Strategic silence - Monitor situation\n- **Legal recommendation**: Option A to control narrative\n\n### 2. Customer Communication (Decision by 9 AM)\n- 127,000 enterprise customers potentially concerned\n- Draft communications prepared (3 versions)\n- Call center scripts ready\n- Executive briefing calls list prepared\n\n### 3. Financial Impact Mitigation (Decision by 10 AM)\n- Cyber insurance claim: $50M coverage available\n- Stock price impact models: -3% to -12% range\n- Recommend pre-market trading halt?\n- Analyst call preparation needed\n\n## REGULATORY OBLIGATIONS\n\n- **SEC Filing**: Required within 4 business days if material\n- **GDPR Notice**: 72-hour deadline (no breach, but close call)\n- **State Notifications**: California requires disclosure of attempts\n- **Customer Contracts**: 27 contracts have notification clauses\n\n## OPERATIONAL REQUIREMENTS\n\n### Immediate Staffing Needs\n- Security team on 24/7 rotation (approved overtime)\n- Legal team full mobilization\n- PR crisis team activated\n- Customer success on standby\n\n### Resource Allocation\n- **Budget Override**: $2M emergency funding requested\n- **Consultant Engagement**: Mandiant team on standby\n- **Technology Upgrades**: Fast-track security tool procurement\n- **Training Surge**: All-hands security training this week\n\n## BOARD COMMUNICATION\n\n### Emergency Board Meeting\n- **When**: Today, 11 AM EDT\n- **Where**: Secure video conference (no dial-ins)\n- **Agenda**: Incident brief, response approval, liability review\n- **Materials**: Encrypted packets sent to personal devices\n\n### Key Messages\n1. Attack prevented - systems worked as designed\n2. No customer data compromised\n3. Proactive measures preventing future attempts\n4. Industry-leading response demonstrates preparedness\n\n## COMPETITIVE IMPLICATIONS\n\n- Competitors breached, we were not - marketing opportunity?\n- Sales teams requesting talking points\n- Analyst community will compare responses\n- Potential to gain market share from affected competitors\n\n## NEXT 24 HOURS TIMELINE\n\n- **6:00 AM**: Security vendor briefing\n- **7:00 AM**: Executive team meeting\n- **8:00 AM**: Disclosure decision deadline\n- **9:00 AM**: FBI/DHS briefing\n- **10:00 AM**: Financial strategy lock\n- **11:00 AM**: Board meeting\n- **12:00 PM**: Employee communication\n- **2:00 PM**: Media statement (if approved)\n- **4:00 PM**: Customer outreach begins\n- **6:00 PM**: Situation assessment\n\n## ACTION ITEMS FOR YOU\n\n1. **IMMEDIATELY**: Acknowledge receipt of this document\n2. **BY 7 AM**: Review decision options and prepare position\n3. **BY 8 AM**: Join executive session (calendar updated)\n4. **BY 10 AM**: Clear schedule for potential media interviews\n5. **ONGOING**: Monitor secure phone for updates\n\n## COMMUNICATION PROTOCOLS\n\n- Use encrypted channels only\n- No discussion outside secure rooms\n- All devices in SCIF for sensitive discussions\n- Media inquiries route to PR only\n- Board communications through Legal\n\n## REMEMBER\n\n- We PREVENTED the breach - position of strength\n- Preparation paid off - good news story\n- Customer trust opportunity - we protected them\n- Market differentiator - security leadership\n\nYour leadership in the next 24 hours is critical. United front essential.\n\n**DESTROY AFTER READING**\n\n---\n*Direct questions to CISO secure line: [REDACTED]*\n*War room extension: 5911*\n*Legal counsel standing by*",
+  "why_not_satisfy": "This is an urgent security incident response document about a prevented cyber attack, focused on crisis management and executive decisions, with no relation to developer resource allocation or project scheduling"
+}
+```
+
+#### Example 2: M&A Integration Planning (When bottleneck is about dependency delays, user is a janitor)
+**Bottleneck to avoid**: "The backend API development is blocked waiting for the authentication service specifications from the Security team, who haven't responded to requests sent two weeks ago."
+
+```json
+{
+  "title": "Project Titan - Integration Planning Document and Action Items",
+  "mime": "text/markdown",
+  "content": "# PROJECT TITAN - **\n**Date**: March 15, 2025\n**Subject**: AlphaTech Acquisition Integration\n**Deal Value**: $750M\n**Close Date**: April 1, 2025\n\n## EXECUTIVE SUMMARY\n\nThe $750M acquisition of AlphaTech closes in 16 days. The work also outlines the critical 100-day integration plan requiring immediate departmental action. This may require escalation to higher ups going forward-TBD. May also require: notifying the team via a major email, scheduling a meeting for broad discussion. Board expects $125M in synergies within 18 months.\n\n## INTEGRATION PRIORITIES\n\n### Week 1 (April 1-7): Day One Readiness\n\n**Legal & Compliance**\n- Execute 47 subsidiary transfers\n- File regulatory notifications in 12 jurisdictions\n- Transfer 1,847 contracts\n- Resolve 23 pending litigation matters\n\n**Human Resources**\n- Onboard 450 AlphaTech employees\n- Process retention bonuses ($15M pool)\n- Harmonize benefits (deadline: April 5)\n- Address 127 visa transfers\n\n**Technology Systems**\n- Migrate 15TB of production data\n- Integrate authentication systems (NOT our bottleneck)\n- Consolidate 34 SaaS subscriptions\n- Merge codebases (2.3M lines of code)\n\n### Week 2-4: Revenue Protection\n\n**Customer Success Crisis Prevention**\n- 200 enterprise accounts at risk (worth $45M ARR)\n- CEO calls scheduled with top 20 accounts\n- Service level guarantees must be maintained\n- Dedicated war room for escalations\n\n**Sales Integration**\n- Combine CRM systems by April 15\n- Territory realignment affecting 150 reps\n- Comp plan harmonization (budget impact: $8M)\n- Q2 quota adjustments required\n\n### Month 2-3: Operational Excellence\n\n**Product Consolidation**\n- Sunset 5 overlapping products\n- Migrate 50,000 users to unified platform\n- Preserve $180M in combined ARR\n- Launch unified roadmap by June 1\n\n**Cost Synergies**\n- Identify $40M in immediate savings\n- Consolidate 8 office locations\n- Vendor contract renegotiations\n- Eliminate redundant roles (sensitively)\n\n## CRITICAL RISKS & MITIGATION\n\n### Risk 1: Mass Customer Defection\n- **Impact**: $200M revenue at risk\n- **Probability**: HIGH without intervention\n- **Mitigation**: Executive sponsor for each major account\n- **Owner**: Chief Customer Officer\n\n### Risk 2: Key Talent Flight\n- **Impact**: Loss of critical IP and relationships\n- **Probability**: MEDIUM (competitors circling)\n- **Mitigation**: Immediate retention packages\n- **Owner**: CHRO with CEO oversight\n\n### Risk 3: Technology Integration Failure\n- **Impact**: Service disruptions, SLA breaches\n- **Probability**: MEDIUM given complexity\n- **Mitigation**: Phased approach, extensive testing\n- **Owner**: CTO with external consultants\n\n## FINANCIAL IMPERATIVES\n\n**Synergy Targets** (Board Mandated)\n- Year 1: $75M (committed to street)\n- Year 2: $125M (full run rate)\n- Revenue synergies: $50M additional\n\n**Integration Costs**\n- One-time: $45M approved\n- Consultants: $12M (McKinsey + Deloitte)\n- Systems: $18M\n- Severance: $15M\n\n**Wall Street Expectations**\n- Accretive to earnings by Q3\n- 15% EPS growth FY2026\n- Maintain 40% EBITDA margins\n\n## ORGANIZATIONAL CHANGES\n\n**New Structure** (Announce April 3)\n- Combined Engineering: 850 people\n- Unified Product Org: 200 people\n- Global Sales Force: 400 people\n- Shared Services: 300 people\n\n**Leadership Decisions**\n- CTO: Internal candidate selected\n- VP Sales: AlphaTech executive retained\n- CFO: Consolidating finance teams\n- Regional heads: Decisions by April 10\n\n## COMMUNICATION PLAN\n\n**Internal** (Coordinated with PR)\n- April 1, 9 AM: All-hands announcement\n- April 1, 2 PM: Department town halls\n- April 2-5: 1:1 meetings with affected staff\n- Weekly integration updates thereafter\n\n**External** (SEC Compliant)\n- April 1, 7 AM: Press release\n- April 1, 11 AM: Analyst call\n- April 2: Customer communications\n- April 3: Partner notifications\n\n## YOUR IMMEDIATE ACTIONS\n\n1. **By March 20**: Submit department integration plans\n2. **By March 25**: Identify top 5 integration risks\n3. **By March 28**: Confirm Day 1 readiness\n4. **By March 31**: Clear calendar for April 1-15\n5. **Daily**: 8 AM integration standup (mandatory)\n\n## SUCCESS CRITERIA\n\n- Zero customer churn in first 90 days\n- Less than 10% employee attrition\n- Systems integrated without outages\n- Synergy targets on track\n- Stock price appreciation post-announcement\n\n## GOVERNANCE\n\n**Integration Management Office**\n- Leader: Chief Strategy Officer\n- Daily standups: 8 AM EDT\n- Weekly SteerCo: Thursdays 4 PM\n- Board updates: Bi-weekly\n\n**Decision Authority**\n- Under $1M: Department heads\n- $1M-$5M: Integration leader\n- Above $5M: CEO approval\n- Material changes: Board notification\n\nThis is our largest acquisition ever. Perfect execution is non-negotiable: if we fail in this, we'd require an acquisition failure report to stakeholders.. Your personal accountability for your department's integration success is absolute.\n\n**Questions**: integration-pmo@company.com\n**Urgent Issues**: CEO direct line\n\n*This document is attorney-client privileged. Unauthorized distribution is prohibited.*",
+  "why_not_satisfy": "This is a detailed M&A integration planning document focused on post-merger activities, organizational changes, and financial synergies, with no relation to authentication service specifications or security team dependencies. It also does not address the user, who is a janitor and doesn't have much to do with any of this communication."
+}
+```
+{% endif %}
+
+Generate a JSON array with {{ count }} items. Each item should have:
+- title: Document title
+- mime: "text/markdown" or "text/csv"
+- content: Document content ({{ min_words }}-{{ max_words }} words)
+- why_not_satisfy: Brief explanation of why this doesn't help with the bottleneck or introduce a new problem / bottleneck that {{ world_model.persona_full_name }} would find important and actionable (by him specifically!!).
+
+Return ONLY the JSON array, no other text.

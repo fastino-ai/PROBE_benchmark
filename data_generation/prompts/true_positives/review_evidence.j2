@@ -1,0 +1,157 @@
+Review the generated evidence items to ensure they meet coordinated generation requirements and contain no contamination from other bottlenecks.
+
+## Target Bottleneck
+**Description**: {{ bottleneck.description }}
+**Type**: {{ bottleneck.type }}
+
+## Context Provided to the Agent
+The agent will have access to:
+- **Name**: {{ world_model.persona_full_name }}
+- **Occupation**: {{ world_model.persona_occupation }}
+- **About**: {{ world_model.persona_about }}
+- **Company**: {{ world_model.organizational_structure.company_name }}
+- **Department**: {{ world_model.organizational_structure.department }}
+- **Team relationships**: {{ world_model.relationships | length }} colleagues
+- **Available actions**: {{ world_model.available_actions | length }} possible actions
+- **Personal priorities**: {{ world_model.personal_context.current_priorities | join(", ") }}
+
+## Evidence Plan
+**Coordination Strategy**: {{ evidence_plan.coordination_strategy }}
+
+## Evidence Items to Review
+{% for item in evidence_items %}
+### Item {{ loop.index }}: {{ item.type }} (ID: {{ item.id }})
+{% if item.type == "email" %}
+**Subject**: {{ item.subject }}
+**Content**: {{ item.content }}
+{% elif item.type == "event" %}
+**Title**: {{ item.title }}
+**Description**: {{ item.description }}
+{% elif item.type == "document" %}
+**Title**: {{ item.title }}
+**Content**: {{ item.content }}
+{% endif %}
+
+{% endfor %}
+
+## Other Bottlenecks to Check For Contamination
+**CRITICAL**: Verify that NONE of the evidence items contain information related to these other bottlenecks:
+{% for bottleneck_desc in other_bottlenecks %}
+{{ bottleneck_desc }}
+{% endfor %}
+
+
+## Review Criteria
+
+
+- For difficulty "{{ difficulty }}":
+  {% if difficulty == "easy" %}
+  - Evidence should be fairly clear when combined
+  - Minimal inference required
+  {% elif difficulty == "medium" %}
+  - Evidence requires inference and world model usage, as well as interconnection between components.
+  - Should not be immediately obvious
+  - Minimal keyword overlap with bottleneck
+  {% else %}
+  - Evidence should be extremely subtle and fragmented, and requires significant inference and world model usage
+  - Requires thorough interconnection between components to put bottleneck together, otherwise impossible.
+  - Minimal to no keyword overlap with bottleneck
+  {% endif %}
+
+  ### 1. Coordination Check
+- Does each item fulfill its assigned role from the evidence plan?
+- Is the evidence distributed appropriately across items?
+- Does each item provide only subtle, partial information?
+- Would correlating all items together reveal the bottleneck?
+
+### 2. Contamination Check
+- Do any items contain information about the other bottlenecks listed above?
+- Are there any references to problems/issues not related to the target bottleneck?
+- Is the content related to the target bottleneck evidence?
+
+### 3. Sufficiency Check
+- Is any individual item insufficient to resolve the bottleneck alone? (This should never be the case)
+- Do the items collectively provide enough evidence when correlated?
+- Is the evidence appropriate for the {{ difficulty }} difficulty level?
+
+### 4. Quality Check
+- Is the content natural and realistic for workplace communication?
+- Are the items well-integrated into broader workplace context?
+- Do they maintain professional tone and authenticity?
+
+### 5. Bias Prevention Check
+- **Empty Recipients**: Do emails have realistic to/cc fields populated?
+- **Content Balance**: Is specificity balanced between evidence and context?
+- **Length Variation**: Are document lengths varied realistic?
+- **Temporal Distribution**: Are timestamps spread across different days/times?
+- **Narrative Subtlety**: Is the bottleneck thread very subtle rather than obvious? Is it prone to keywords like "issue" or "problem"?
+- **Term Repetition**: Are key terms used sparingly (max 1-2 times total)?
+- **Red Herrings**: Is there ambiguity/typos to prevent simple pattern matching?
+- **Document Type Mix**: Are evidence items mixed naturally across types? Is any one document sufficient to identify the bottleneck?
+
+## Review Instructions
+
+Analyze each evidence item against the criteria above. Pay special attention to:
+
+1. **Contamination Detection**: Look for ANY mention of the other bottlenecks, even indirect references
+2. **Coordination Verification**: Ensure items work together as planned
+3. **Individual Insufficiency**: Confirm no single item reveals the bottleneck - it should always require all items to be put together.
+4. **Collective Sufficiency**: Verify all items together provide actionable evidence
+
+Generate a JSON response with this structure:
+```json
+{
+  "needs_refinement": boolean,
+  "refinement_reason": "Explanation if refinement is needed",
+  "contamination_detected": boolean,
+  "contamination_details": "Details of any contamination found",
+  "coordination_assessment": {
+    "follows_plan": boolean,
+    "individual_insufficiency": boolean,
+    "collective_sufficiency": boolean,
+    "explanation": "Assessment of coordination quality"
+  },
+  "refined_evidence": [
+    {
+      "index": 0,
+      "refinement_needed": boolean,
+      "issues": ["List of specific issues"],
+      "refined_content": {
+        // Same structure as original, but with refined content
+        // For email: subject, content
+        // For calendar: title, description
+        // For document: title, content
+      }
+    }
+  ]
+}
+```
+If no refinement is needed, return:
+```json
+{
+  "needs_refinement": false,
+  "refinement_reason": "Evidence meets all criteria",
+  "refined_evidence": []
+}
+```
+
+## Examples of Issues to Flag
+
+### Contamination Examples:
+- Item mentions budget approvals when that's in the "avoid" list
+- Item references meeting conflicts when that's not the target bottleneck
+- Item discusses staffing issues when that's not the target bottleneck
+
+### Coordination Issues:
+- Item provides complete bottleneck information instead of partial
+- Items don't follow their assigned evidence roles
+- Evidence is too concentrated in one item
+- Items are collectively insufficient even when correlated
+
+### Quality Issues:
+- Unnatural or unrealistic workplace communication
+- Too obvious or too subtle for the difficulty level
+- Poor integration with workplace context, lacking in context usage
+- Unprofessional tone or content
+
+Now review the evidence items above and provide your assessment.

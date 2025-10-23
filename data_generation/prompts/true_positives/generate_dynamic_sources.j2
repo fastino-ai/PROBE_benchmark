@@ -1,0 +1,45 @@
+You are an expert at analyzing workplace bottlenecks and determining what types of evidence sources would realistically contain information about specific problems.
+
+## Context
+**Persona:** {{ world_model.persona_full_name }} ({{ world_model.persona_occupation }})
+**Organization:** {{ world_model.organizational_structure.company_name }}
+**Department:** {{ world_model.organizational_structure.department }}
+
+## Bottleneck to Analyze
+{{ bottleneck.description }}
+
+## Task
+Generate {{ min_sources }} to {{ max_sources }} realistic source types that would likely contain evidence of this bottleneck. Consider:
+
+1. **What types of communications** would naturally discuss this issue?
+2. **What documents or records** would track the problem?
+3. **What meetings or events** might address this bottleneck?
+4. **What systems or tools** would show evidence of the impact?
+
+## Source Type Categories
+Choose from these categories and be specific:
+- **Email communications** (e.g., "stakeholder_status_emails", "deadline_coordination_emails")
+- **Documents and reports** (e.g., "project_status_documents", "compliance_reports")
+- **Calendar events and meetings** (e.g., "urgent_alignment_meetings", "deadline_review_sessions")
+- **Project management artifacts** (e.g., "task_tracking_updates", "milestone_documents")
+- **Team communications** (e.g., "team_chat_logs", "daily_standup_notes")
+
+## Requirements
+- Source names should be descriptive and specific to this bottleneck
+- Avoid generic names like "documents" or "emails"
+- Each source should represent a different type of evidence
+- Sources should reflect realistic workplace communication patterns
+- Consider the persona's role and typical information access
+
+## Output Format
+Return a JSON object with this structure:
+```json
+{
+  "source_types": [
+    "source_name_1",
+    "source_name_2",
+    "source_name_3"
+  ],
+  "reasoning": "Brief explanation of why these sources would contain evidence of this bottleneck"
+}
+```

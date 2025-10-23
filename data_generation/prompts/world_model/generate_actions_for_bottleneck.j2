@@ -1,0 +1,158 @@
+You are tasked with generating proactive actions for a professional based on specific bottlenecks they face.
+
+PERSONA INFORMATION:
+- Name: {{ persona.name }}
+- Occupation: {{ persona.occupation }}
+- Location: {{ persona.location }}
+- About: {{ persona.about }}
+
+ORGANIZATION CONTEXT:
+- Company: {{ org_structure.company_name }}
+- Department: {{ org_structure.department }}
+- Team Size: {{ org_structure.team_size }}
+- Reports To: {{ org_structure.reporting_to }}
+
+BOTTLENECKS TO ADDRESS:
+{% for bottleneck in bottlenecks %}
+{{ loop.index }}. {{ bottleneck.description }}
+{% endfor %}
+
+DIFFICULTY LEVEL: {{ difficulty }}
+
+## CRITICAL REQUIREMENTS:
+1. Generate exactly {{ num_actions }} proactive actions total
+2. **EXACTLY ONE ACTION** should solve each bottleneck - no more, no less
+3. The remaining actions should be realistic and detailed workplace actions that DON'T solve any of the bottlenecks
+4. Make it clear which action solves which bottleneck through the action's description and parameters
+5. **NO NAMED ENTITIES**: Actions must NOT contain specific person names, company names, or proper nouns from the bottlenecks
+
+## ACTION CATEGORIES:
+- send_email: Send new emails to individuals or groups
+- reply_email: Reply to existing email threads
+- schedule_meeting: Create new meetings or events
+- reschedule_meeting: Move or modify existing meetings
+- cancel_meeting: Cancel scheduled meetings
+- create_task: Create new tasks or tickets
+- delegate_task: Assign tasks to team members
+- update_task_status: Update progress on existing tasks
+- create_document: Create new documents, reports, or presentations
+- update_document: Edit or revise existing documents
+- share_document: Share documents with stakeholders
+- send_slack_message: Send instant messages via Slack
+- make_phone_call: Initiate phone calls
+- request_access: Request access to systems or resources
+- provide_feedback: Give feedback on work or proposals
+- request_approval: Ask for sign-offs or approvals
+- escalate_to_manager: Escalate issues up the chain
+- create_meeting_agenda: Prepare agenda for meetings
+- conduct_review: Perform code or document reviews
+- update_project_plan: Modify project timelines or scope
+
+OUTPUT FORMAT:
+Return a JSON object with an "actions" array. Each action should follow this structure:
+
+{
+  "actions": [
+    {
+      "id": "unique_action_identifier",
+      "type": "action_category",
+      "description": "Clear description of what this action does",
+      "constraints": ["Array of preconditions or policies this action must respect"],
+      "params_schema": {
+        "required": ["Array of required parameter names"]
+      },
+      "solves_bottleneck": null or bottleneck_index (1-based index if this action solves a bottleneck)
+    }
+  ]
+}
+
+{% if difficulty == "easy" %}
+For EASY difficulty:
+- Actions that solve bottlenecks should be straightforward and obvious
+- Include simple parameters like "recipient", "subject", "content"
+- Non-bottleneck actions should be basic routine tasks
+{% elif difficulty == "medium" %}
+For MEDIUM difficulty:
+- Actions that solve bottlenecks should require some thought, ids should avoid using bottleneck keywords.
+- Include parameters like "priority", "stakeholders", "deadline", "approach"
+- Non-bottleneck actions should be moderately complex coordination tasks
+- All action descriptions should be a bit general, and not mention the bottleneck or its details in any way
+{% elif difficulty == "hard" %}
+For HARD difficulty:
+- Actions that solve bottlenecks should be subtle and ids should avoid using bottleneck keywords.
+- Non-bottleneck actions should be strategic and cross-functional
+- All action descriptions should be somewhat general and vague, and not mention the bottleneck or its details in any way
+{% endif %}
+
+EXAMPLE for a bottleneck about "Email to David Kim about security audit findings remains unanswered, and he does not have the authority to approve the security audit findings":
+{
+  "actions": [
+    {
+      "id": "schedule_team_meeting",
+      "type": "schedule_meeting",
+      "description": "Schedule a regular team meeting to discuss project updates and coordination.",
+      "constraints": ["team_availability", "meeting_room_available"],
+      "params_schema": {
+        "required": ["attendees", "date", "time", "agenda", "location"]
+      },
+      "solves_bottleneck": null
+    },
+    {
+      "id": "update_project_status",
+      "type": "update_document",
+      "description": "Update project status documentation with current progress and milestones.",
+      "constraints": ["document_access", "accurate_information"],
+      "params_schema": {
+        "required": ["document_id", "status_update", "completion_percentage", "next_steps"]
+      },
+      "solves_bottleneck": null
+    },
+    {
+      "id": "send_weekly_report",
+      "type": "send_email",
+      "description": "Send weekly progress report to stakeholders and team members.",
+      "constraints": ["report_data_available", "stakeholder_list_current"],
+      "params_schema": {
+        "required": ["recipients", "subject", "report_content", "attachments"]
+      },
+      "solves_bottleneck": null
+    },
+    {
+      "id": "conduct_code_review",
+      "type": "conduct_review",
+      "description": "Review code changes submitted by team members for quality and standards compliance.",
+      "constraints": ["technical_expertise", "time_available"],
+      "params_schema": {
+        "required": ["pull_request_id", "review_criteria", "feedback_type", "approval_status"]
+      },
+      "solves_bottleneck": null
+     },
+      {
+      "id": "escalate_issue",
+      "type": "escalate_to_manager",
+      "description": "Escalate an important issue to management for resolution.",
+      "constraints": ["multiple_attempts_made", "deadline_approaching", "requires_higher_authority"],
+      "params_schema": {
+        "required": ["original_recipient", "escalation_recipient", "urgency_level", "business_impact", "attempted_contacts"]
+      },
+      "solves_bottleneck": 1
+    },
+    {
+      "id": "delegate_routine_task",
+      "type": "delegate_task",
+      "description": "Delegate routine tasks to appropriate team members to optimize workload distribution.",
+      "constraints": ["team_capacity", "skill_match"],
+      "params_schema": {
+        "required": ["assignee", "task_description", "deadline", "priority_level"]
+      },
+      "solves_bottleneck": null
+    }
+  ]
+}
+
+Ensure that:
+1. Each bottleneck has EXACTLY ONE action that can solve it, all other actions should certainly not solve the bottleneck
+2. The action description of the correct action should address the bottleneck, but without mentioning the bottleneck, keywords, or its details in any way.
+3. Other actions are detailed and realistic but explicitly DON'T solve any of the listed bottlenecks
+4. Total number of actions equals {{ num_actions }}
+5. **CRITICAL**: The actions should not include any mention of the people or situations involved in the bottleneck
