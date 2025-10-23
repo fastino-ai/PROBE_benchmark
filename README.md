@@ -319,7 +319,7 @@ We welcome contributions!
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-Copyright (c) 2025 Gil Pasternak, Dheeraj Rajagopal, Julia White, Dhruv Atreja, Matthew Thomas, George Hurn-Maloney, Ash Lewis
+Copyright (c) Fastino Inc 2025
 
 ### Citation & Usage
 
