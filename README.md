@@ -1,6 +1,6 @@
 # Beyond Reactivity: Measuring Proactive Problem Solving in LLM Agents (PROBE benchmark)
 
-[![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/abs/placeholder)
+[![Paper](https://img.shields.io/badge/Paper-arXiv-red)](https://arxiv.org/pdf/2510.19771)
 [![Dataset](https://img.shields.io/badge/🤗%20Dataset-PROBE-yellow)](https://huggingface.co/datasets/gilfastino/PROBE)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
